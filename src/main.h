@@ -2,6 +2,7 @@
 #define MAIN_H
 
 #include <iostream>
+#include <set>
 #include <cmath>
 #include <fstream>
 #include <vector>
@@ -71,7 +72,6 @@ struct bounding_box_t {
 };
 
 bool detect_collision(bounding_box_t a, bounding_box_t b);
-
 extern float screen_zoom, screen_center_x, screen_center_y;
 void reset_screen();
 

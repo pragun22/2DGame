@@ -14,6 +14,7 @@ GLFWwindow *window;
 **************************/
 
 Ball coins[100];
+set<int> del_coins;
 Player player;
 Platform platform;
 float score = 0;
@@ -66,7 +67,9 @@ void draw() {
     // ball1.draw(VP);
     player.draw(VP);
     platform.draw(VP);
-    for(int i = 0; i < 100; i++) coins[i].draw(VP);
+    for(int i = 0; i < 100; i++) {
+        if(del_coins.find(i)==del_coins.end()) coins[i].draw(VP);
+    }
 }
 
 void tick_input(GLFWwindow *window) {
@@ -99,12 +102,16 @@ void tick_elements() {
         a.x = player.position.x;
         a.y = player.position.y;
         a.width = 1;
-        a.height = 1.4;
-        b.x = coins[i].position.x-0.2;
+        a.height = 2.4;
+        b.x = coins[i].position.x-0.44;
         b.y = coins[i].position.y-0.2;
         b.width = 0.4;
         b.height = 0.4;
-        if(detect_collision(a,b)) exit(0);
+        if(detect_collision(a,b))
+        {
+            // cout<<a.x<<"--"<<coins[i].position.x<<endl;
+            del_coins.insert(i); 
+        }
     }
 }
 
@@ -129,6 +136,8 @@ void initGL(GLFWwindow *window, int width, int height) {
             coins[i] = Ball(x1,2.5,COLOR_COIN);
             coins[99-i] = Ball(x1 , 3, COLOR_COIN);
         }
+        // coin.insert(coins[i]);
+        // coin.insert(coins[99-i]);
     }
     // Create and compile our GLSL program from the shaders
     programID = LoadShaders("Sample_GL.vert", "Sample_GL.frag");
