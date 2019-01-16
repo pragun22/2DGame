@@ -93,6 +93,19 @@ void tick_input(GLFWwindow *window) {
 }
 void tick_elements() {
     player.tick();
+    for(int i = 0; i<100;i++)
+    {
+        bounding_box_t a,b;
+        a.x = player.position.x;
+        a.y = player.position.y;
+        a.width = 1;
+        a.height = 1.4;
+        b.x = coins[i].position.x-0.2;
+        b.y = coins[i].position.y-0.2;
+        b.width = 0.4;
+        b.height = 0.4;
+        if(detect_collision(a,b)) exit(0);
+    }
 }
 
 /* Initialize the OpenGL rendering properties */
