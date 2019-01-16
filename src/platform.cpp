@@ -4,26 +4,9 @@
 Platform::Platform(float x, float y, float depth) {
     this->position = glm::vec3(x, y, 0);
     this->rotation = 0;
-    GLfloat vertex_buffer_data[]={
-        0, 0, 0,
-        0, depth, 0,
-        3, depth, 0, // square 2
-        
-        0, 0, 0,
-        3, depth, 0,
-        3, 0, 0, //square 1
-
-        3, 0, 0,
-        6, depth, 0,
-        3, depth, 0, //square 3
-        
-        6, 0, 0,
-        6, depth, 0,
-        3, 0, 0 //square 4
-        
-    };
+    GLfloat vertex_buffer_data[1000000];
     int i,inc=0;
-    for(i=0;i<12;i++)
+    for(i=0;i<12000*18;i+=18)
     {
         vertex_buffer_data[i] = 0+inc;
         vertex_buffer_data[i+1] = 0;
@@ -43,23 +26,25 @@ Platform::Platform(float x, float y, float depth) {
         vertex_buffer_data[i+15] = 3+inc;
         vertex_buffer_data[i+16] = 0;
         vertex_buffer_data[i+17] = 0;
+        inc+=3;
     }
-    const GLfloat color_buffer[]={
-        98.0/256.0, 244.0/256.0, 66.0/256.0,
-        98.0/256.0, 244.0/256.0, 66.0/256.0,
-        98.0/256.0, 244.0/256.0, 66.0/256.0,
-        98.0/256.0, 244.0/256.0, 66.0/256.0,
-        98.0/256.0, 244.0/256.0, 66.0/256.0,
-        98.0/256.0, 244.0/256.0, 66.0/256.0, //green
-
-        66.0/256.0, 134.0/256.0, 244.0/256.0,
-        66.0/256.0, 134.0/256.0, 244.0/256.0,
-        66.0/256.0, 134.0/256.0, 244.0/256.0,
-        66.0/256.0, 134.0/256.0, 244.0/256.0,
-        66.0/256.0, 134.0/256.0, 244.0/256.0,
-        66.0/256.0, 134.0/256.0, 244.0/256.0 // blue
-    };
-    this->object = create3DObject(GL_TRIANGLES, 4*3, vertex_buffer_data, color_buffer, GL_FILL);
+    GLfloat color_buffer[1000000];
+    int itr = 0;
+    bool flag = false;
+    for(i = 0 ; i < 12000*3;i+=3)
+    {
+        itr++;
+        flag? color_buffer[i] = 98.0/256.0:color_buffer[i]=66.0/256.0;
+        flag? color_buffer[i+1] = 244.0/256.0:color_buffer[i+1]=134.0/256.0;
+        flag? color_buffer[i+2] = 66.0/256.0:color_buffer[i+2]=244.0/256.0;
+        if(itr==6)
+        {
+            if(flag)  flag = false;
+            else flag = true;
+            itr = 0;
+        }
+    }
+    this->object = create3DObject(GL_TRIANGLES, 4000*3, vertex_buffer_data, color_buffer, GL_FILL);
 }
 
 void Platform::draw(glm::mat4 VP) {

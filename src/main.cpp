@@ -81,10 +81,13 @@ void tick_input(GLFWwindow *window) {
     if(right) 
     {
         player.move(1);
-        screen_center_x += 0.01f;
+        screen_center_x += 0.07f;
         platform.move();
     }
-    if(left) player.move(0);
+    if(left){
+      player.move(0); 
+      screen_center_x -= 0.07f;
+    } 
 }
 
 int pos = 0;
@@ -109,7 +112,7 @@ void initGL(GLFWwindow *window, int width, int height) {
 
     // ball1  = Ball(3, -2, COLOR_RED);
     player = Player(-3,-2, COLOR_BLACK);
-    platform = Platform(-4, -4 , 1);
+    platform = Platform(-30, -4 , 1);
     // Create and compile our GLSL program from the shaders
     programID = LoadShaders("Sample_GL.vert", "Sample_GL.frag");
     // Get a handle for our "MVP" uniform
