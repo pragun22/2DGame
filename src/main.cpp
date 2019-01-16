@@ -104,9 +104,18 @@ void initGL(GLFWwindow *window, int width, int height) {
     // ball1  = Ball(3, -2, COLOR_RED);
     player = Player(-3,-2, COLOR_BLACK);
     platform = Platform(-30, -4 , 1);
-    for(int i = 0;i<100;i++)
+    for(int i = 0;i<50;i++)
     {
-        coins[i] = Ball(1.2+i,1,COLOR_COIN);
+        float x1 = 4.2 +(float)i/2.0;
+        if(i<25)
+        {
+            coins[i] = Ball(x1, 2, COLOR_COIN);
+            coins[99-i] = Ball(x1 , 2.5, COLOR_COIN);
+        }
+        else{
+            coins[i] = Ball(x1,2.5,COLOR_COIN);
+            coins[99-i] = Ball(x1 , 3, COLOR_COIN);
+        }
     }
     // Create and compile our GLSL program from the shaders
     programID = LoadShaders("Sample_GL.vert", "Sample_GL.frag");

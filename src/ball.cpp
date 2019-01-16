@@ -10,14 +10,14 @@ Ball::Ball(float x, float y, color_t color) {
 	{
 		float angle = 2*M_PI*inc/n;
 		// if(inc==n) angle = 0;
-		vertex_buffer_data[i]=0.20*cos(angle);
-		vertex_buffer_data[i+1]=0.20*sin(angle);
+		vertex_buffer_data[i]=0.2*cos(angle);
+		vertex_buffer_data[i+1]=0.2*sin(angle);
 		vertex_buffer_data[i+2]=0;
 		vertex_buffer_data[i+3]=0;
 		vertex_buffer_data[i+4]=0;
 		vertex_buffer_data[i+5]=0;
-		vertex_buffer_data[i+6]=0.20*cos(2*M_PI*+(inc+1)/n);
-		vertex_buffer_data[i+7]=0.20*sin(2*M_PI*+(inc+1)/n);
+		vertex_buffer_data[i+6]=0.2*cos(2*M_PI*+(inc+1)/n);
+		vertex_buffer_data[i+7]=0.2*sin(2*M_PI*+(inc+1)/n);
 		vertex_buffer_data[i+8]=0;
 		inc++;
 	}
