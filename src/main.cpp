@@ -13,12 +13,13 @@ GLFWwindow *window;
 * Customizable functions *
 **************************/
 
-Ball ball1;
+Ball coins[100];
 Player player;
 Platform platform;
 float score = 0;
 float screen_zoom = 1, screen_center_x = 0, screen_center_y = 0;
 float camera_rotation_angle = 0;
+int pos = 0;
 
 Timer t60(1.0 / 60);
 
@@ -65,6 +66,7 @@ void draw() {
     // ball1.draw(VP);
     player.draw(VP);
     platform.draw(VP);
+    for(int i = 0; i < 100; i++) coins[i].draw(VP);
 }
 
 void tick_input(GLFWwindow *window) {
@@ -89,18 +91,7 @@ void tick_input(GLFWwindow *window) {
       screen_center_x -= 0.07f;
     } 
 }
-
-int pos = 0;
 void tick_elements() {
-    // bounding_box_t a,b;
-    // a.height = 2;
-    // b.height = 2;
-    // a.width = 2;
-    // b.width = 2;
-    // a.x=ball1.position.x;
-    // a.y=ball1.position.y;
-    // if(detect_collision(a, b)) pos = 1;
-    // ball1.tickl(pos);
     player.tick();
 }
 
@@ -113,6 +104,10 @@ void initGL(GLFWwindow *window, int width, int height) {
     // ball1  = Ball(3, -2, COLOR_RED);
     player = Player(-3,-2, COLOR_BLACK);
     platform = Platform(-30, -4 , 1);
+    for(int i = 0;i<100;i++)
+    {
+        coins[i] = Ball(1.2+i,1,COLOR_COIN);
+    }
     // Create and compile our GLSL program from the shaders
     programID = LoadShaders("Sample_GL.vert", "Sample_GL.frag");
     // Get a handle for our "MVP" uniform
@@ -154,12 +149,12 @@ int main(int argc, char **argv) {
             // Swap Frame Buffer in double buffering
             glfwSwapBuffers(window);
 
-    score += float(1*float(1/60));
-    char buffer[256];
-    sprintf(buffer,"SCORE :  %.2f",score);
-    // std::cout<<score<<std::endl;
-    // renderBitmapString(0,0,buffer);
-    // printText2D(buffer,10,500,60);
+            score += float(1*float(1/60));
+            char buffer[256];
+            sprintf(buffer,"SCORE :  %.2f",score);
+            // std::cout<<score<<std::endl;
+            // renderBitmapString(0,0,buffer);
+            // printText2D(buffer,10,500,60);
             tick_elements();
             tick_input(window);
             reset_screen();
