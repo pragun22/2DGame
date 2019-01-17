@@ -81,6 +81,7 @@ extern const color_t COLOR_GREEN;
 extern const color_t COLOR_BLACK;
 extern const color_t COLOR_BACKGROUND;
 extern const color_t COLOR_COIN;
+extern const color_t COLOR_COIN1;
 //variables
 //extra functions 
  

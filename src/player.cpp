@@ -2,6 +2,7 @@
 #include "main.h"
 
 Player::Player(float x, float y, color_t color) {
+    std::cout << x << " " << y << std::endl;
     this->position = glm::vec3(x, y, 0);
     this->rotation = 0;
     this->friction = 0.95;
@@ -83,21 +84,24 @@ void Player::jump(){
 }
 void Player::move(int l)
 {
-    if(l) this->xspeed = 0.075f;
-    else this->xspeed = -1*0.075f;
+    float factor = 1;
+    if(this->position.y!=-2) factor = 2;
+    if(l) this->xspeed = factor*0.075f;
+    else this->xspeed = factor*-1*0.075f;
 }
 
 void Player::tick(){
     this->position.x +=this->xspeed;
     this->position.y += this->yspeed;
-    if(this->position.y<0)
+    if(this->position.y<-2)
     {
         this->yspeed = 0;
-        this->position.y = 0;
+        this->position.y = -2;
     }
     if(this->yspeed!=0)
     {
-        this->yspeed += -1*0.015;
+        this->yspeed += -1*0.005;
+        // this->yspeed += -1*0.015;
     }
     if(this->xspeed>0)
     {

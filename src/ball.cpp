@@ -1,7 +1,7 @@
 #include "ball.h"
 #include "main.h"
 
-Ball::Ball(float x, float y, color_t color) {
+Ball::Ball(float x, float y, color_t color,float r) {
     this->position = glm::vec3(x, y, 0);
     int n = 400;
     int inc = 1;
@@ -10,14 +10,14 @@ Ball::Ball(float x, float y, color_t color) {
 	{
 		float angle = 2*M_PI*inc/n;
 		// if(inc==n) angle = 0;
-		vertex_buffer_data[i]=0.2*cos(angle);
-		vertex_buffer_data[i+1]=0.2*sin(angle);
+		vertex_buffer_data[i]=r*cos(angle);
+		vertex_buffer_data[i+1]=r*sin(angle);
 		vertex_buffer_data[i+2]=0;
 		vertex_buffer_data[i+3]=0;
 		vertex_buffer_data[i+4]=0;
 		vertex_buffer_data[i+5]=0;
-		vertex_buffer_data[i+6]=0.2*cos(2*M_PI*+(inc+1)/n);
-		vertex_buffer_data[i+7]=0.2*sin(2*M_PI*+(inc+1)/n);
+		vertex_buffer_data[i+6]=r*cos(2*M_PI*+(inc+1)/n);
+		vertex_buffer_data[i+7]=r*sin(2*M_PI*+(inc+1)/n);
 		vertex_buffer_data[i+8]=0;
 		inc++;
 	}

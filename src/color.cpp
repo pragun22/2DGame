@@ -5,3 +5,4 @@ const color_t COLOR_GREEN = { 135, 211, 124 };
 const color_t COLOR_BLACK = { 52, 73, 94 };
 const color_t COLOR_BACKGROUND = { 201, 188, 175 };
 const color_t COLOR_COIN = { 224, 201, 0 };
+const color_t COLOR_COIN1 = { 245, 30, 100 };

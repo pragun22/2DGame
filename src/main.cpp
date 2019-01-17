@@ -2,6 +2,7 @@
 #include "timer.h"
 #include "ball.h"
 #include "player.h"
+#include "magnet.h"
 #include "platform.h"
 using namespace std;
 
@@ -17,6 +18,7 @@ Ball coins[100];
 set<int> del_coins;
 Player player;
 Platform platform;
+Magnet mag;
 float score = 0;
 float screen_zoom = 1, screen_center_x = 0, screen_center_y = 0;
 float camera_rotation_angle = 0;
@@ -67,9 +69,10 @@ void draw() {
     // ball1.draw(VP);
     player.draw(VP);
     platform.draw(VP);
-    for(int i = 0; i < 100; i++) {
-        if(del_coins.find(i)==del_coins.end()) coins[i].draw(VP);
-    }
+    mag.draw(VP);
+    // for(int i = 0; i < 100; i++) {
+    //     if(del_coins.find(i)==del_coins.end()) coins[i].draw(VP);
+    // }
 }
 
 void tick_input(GLFWwindow *window) {
@@ -96,23 +99,24 @@ void tick_input(GLFWwindow *window) {
 }
 void tick_elements() {
     player.tick();
-    for(int i = 0; i<100;i++)
-    {
-        bounding_box_t a,b;
-        a.x = player.position.x;
-        a.y = player.position.y;
-        a.width = 1;
-        a.height = 2.4;
-        b.x = coins[i].position.x-0.44;
-        b.y = coins[i].position.y-0.2;
-        b.width = 0.4;
-        b.height = 0.4;
-        if(detect_collision(a,b))
-        {
-            // cout<<a.x<<"--"<<coins[i].position.x<<endl;
-            del_coins.insert(i); 
-        }
-    }
+    mag.tick(player);
+    // for(int i = 0; i<100;i++)
+    // {
+    //     bounding_box_t a,b;
+    //     a.x = player.position.x;
+    //     a.y = player.position.y;
+    //     a.width = 1;
+    //     a.height = 2.4;
+    //     b.x = coins[i].position.x-0.44;
+    //     b.y = coins[i].position.y-0.2;
+    //     b.width = 0.4;
+    //     b.height = 0.4;
+    //     if(detect_collision(a,b))
+    //     {
+    //         // cout<<a.x<<"--"<<coins[i].position.x<<endl;
+    //         del_coins.insert(i); 
+    //     }
+    // }
 }
 
 /* Initialize the OpenGL rendering properties */
@@ -121,24 +125,22 @@ void initGL(GLFWwindow *window, int width, int height) {
     /* Objects should be created before any other gl function and shaders */
     // Create the models
 
-    // ball1  = Ball(3, -2, COLOR_RED);
     player = Player(-3,-2, COLOR_BLACK);
     platform = Platform(-30, -4 , 1);
-    for(int i = 0;i<50;i++)
-    {
-        float x1 = 4.2 +(float)i/2.0;
-        if(i<25)
-        {
-            coins[i] = Ball(x1, 2, COLOR_COIN);
-            coins[99-i] = Ball(x1 , 2.5, COLOR_COIN);
-        }
-        else{
-            coins[i] = Ball(x1,2.5,COLOR_COIN);
-            coins[99-i] = Ball(x1 , 3, COLOR_COIN);
-        }
-        // coin.insert(coins[i]);
-        // coin.insert(coins[99-i]);
-    }
+    mag = Magnet(4,3);
+    // for(int i = 0;i<50;i++)
+    // {
+    //     float x1 = 4.2 +(float)i/2.0;
+    //     if(i<25)
+    //     {
+    //         coins[i] = Ball(x1, 2, COLOR_COIN,0.2);
+    //         coins[99-i] = Ball(x1 , 2.5, COLOR_COIN,0.2);
+    //     }
+    //     else{
+    //         coins[i] = Ball(x1,2.5,COLOR_COIN,0.2);
+    //         coins[99-i] = Ball(x1 , 3, COLOR_COIN,0.2);
+    //     }
+    // }
     // Create and compile our GLSL program from the shaders
     programID = LoadShaders("Sample_GL.vert", "Sample_GL.frag");
     // Get a handle for our "MVP" uniform
