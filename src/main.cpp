@@ -104,10 +104,10 @@ void tick_elements() {
     // {
     //     bounding_box_t a,b;
     //     a.x = player.position.x;
-    //     a.y = player.position.y;
+    //     a.y = player.position.y-1;
     //     a.width = 1;
     //     a.height = 2.4;
-    //     b.x = coins[i].position.x-0.44;
+    //     b.x = coins[i].position.x-0.2;
     //     b.y = coins[i].position.y-0.2;
     //     b.width = 0.4;
     //     b.height = 0.4;
@@ -127,18 +127,18 @@ void initGL(GLFWwindow *window, int width, int height) {
 
     player = Player(-3,-2, COLOR_BLACK);
     platform = Platform(-30, -4 , 1);
-    mag = Magnet(34,4);
+    mag = Magnet(14,4);
     // for(int i = 0;i<50;i++)
     // {
     //     float x1 = 4.2 +(float)i/2.0;
     //     if(i<25)
     //     {
     //         coins[i] = Ball(x1, 2, COLOR_COIN,0.2);
-    //         coins[99-i] = Ball(x1 , 2.5, COLOR_COIN,0.2);
+    //         coins[99-i] = Ball(x1 , 7.5, COLOR_COIN,0.2);
     //     }
     //     else{
     //         coins[i] = Ball(x1,2.5,COLOR_COIN,0.2);
-    //         coins[99-i] = Ball(x1 , 3, COLOR_COIN,0.2);
+    //         coins[99-i] = Ball(x1 , 7.5, COLOR_COIN,0.2);
     //     }
     // }
     // Create and compile our GLSL program from the shaders
@@ -201,8 +201,11 @@ int main(int argc, char **argv) {
 }
 
 bool detect_collision(bounding_box_t a, bounding_box_t b) {
-    return (abs(a.x - b.x) * 2 < (a.width + b.width)) &&
-           (abs(a.y - b.y) * 2 < (a.height + b.height));
+    // return (abs(a.x - b.x) * 2 < (a.width + b.width)) &&
+    //        (abs(a.y - b.y) * 2 < (a.height + b.height));
+    bool x = a.x + a.width >= b.x && b.x + b.width >= a.x?true:false;
+    bool y = a.y + a.height >= b.y && b.y + b.height >= a.y?true:false;
+    return (x && y);
 }
 
 void reset_screen() {
