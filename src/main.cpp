@@ -201,8 +201,6 @@ int main(int argc, char **argv) {
 }
 
 bool detect_collision(bounding_box_t a, bounding_box_t b) {
-    // return (abs(a.x - b.x) * 2 < (a.width + b.width)) &&
-    //        (abs(a.y - b.y) * 2 < (a.height + b.height));
     bool x = a.x + a.width >= b.x && b.x + b.width >= a.x?true:false;
     bool y = a.y + a.height >= b.y && b.y + b.height >= a.y?true:false;
     return (x && y);

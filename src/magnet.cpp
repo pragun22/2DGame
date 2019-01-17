@@ -81,9 +81,32 @@ void Magnet::set_position(float x, float y) {
     this->position = glm::vec3(x, y, 0);
 }
 void Magnet::tick(Player* hooman){
+    //to stick to magnet
+    bounding_box_t a,b;
+    a.x = this->position.x;
+    a.y = this->position.y;
+    a.width  = 2;
+    a.height = 1.5;
+    b.x = hooman->position.x;
+    b.y = hooman->position.y-1;
+    b.width = 1;
+    b.height = 2.4;
+    float tempx = b.x, tempy = b.y;
+    if(detect_collision(a,b))
+    {
+        hooman->position.x = tempx;
+        hooman->position.x = tempy;
+    }
+
+    // real function
     float t1 = abs(hooman->position.x - this->position.x+1);
     float t2 = abs(hooman->position.y - this->position.y);
     float dis = t1*t1 + t2*t2; 
     hooman->xspeed -= 0.12/dis;
     hooman->yspeed -= 0.08/dis; 
+}
+bool Magnet::detect_collision(bounding_box_t a, bounding_box_t b) {
+    bool x = a.x + a.width >= b.x && b.x + b.width >= a.x?true:false;
+    bool y = a.y + a.height >= b.y && b.y + b.height >= a.y?true:false;
+    return (x && y);
 }
