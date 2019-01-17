@@ -99,7 +99,7 @@ void tick_input(GLFWwindow *window) {
 }
 void tick_elements() {
     player.tick();
-    mag.tick(player);
+    mag.tick(&player);
     // for(int i = 0; i<100;i++)
     // {
     //     bounding_box_t a,b;
@@ -127,7 +127,7 @@ void initGL(GLFWwindow *window, int width, int height) {
 
     player = Player(-3,-2, COLOR_BLACK);
     platform = Platform(-30, -4 , 1);
-    mag = Magnet(4,3);
+    mag = Magnet(34,4);
     // for(int i = 0;i<50;i++)
     // {
     //     float x1 = 4.2 +(float)i/2.0;

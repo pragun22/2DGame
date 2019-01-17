@@ -15,7 +15,7 @@ public:
     float yspeed;
     float xspeed;
     void draw(glm::mat4 VP);
-    void tick(Player hooman);
+    void tick(Player* hooman);
     void set_position(float x, float y);
     double speed;
 private:

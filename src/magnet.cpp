@@ -80,9 +80,10 @@ void Magnet::draw(glm::mat4 VP) {
 void Magnet::set_position(float x, float y) {
     this->position = glm::vec3(x, y, 0);
 }
-void Magnet::tick(Player hooman){
-    float t1 = abs(hooman.position.x - this->position.x);
-    float t2 = abs(hooman.position.y - this->position.y);
+void Magnet::tick(Player* hooman){
+    float t1 = abs(hooman->position.x - this->position.x+1);
+    float t2 = abs(hooman->position.y - this->position.y);
     float dis = t1*t1 + t2*t2; 
-    hooman.xspeed -= 0.1/dis; 
+    hooman->xspeed -= 0.12/dis;
+    hooman->yspeed -= 0.08/dis; 
 }
