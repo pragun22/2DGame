@@ -2,7 +2,6 @@
 #include "main.h"
 
 Player::Player(float x, float y, color_t color) {
-    std::cout << x << " " << y << std::endl;
     this->position = glm::vec3(x, y, 0);
     this->rotation = 0;
     this->friction = 0.95;
