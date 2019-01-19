@@ -90,18 +90,21 @@ void tick_input(GLFWwindow *window) {
     if(zoom_in) screen_zoom+=0.1;
     if(zoom_out) {
         screen_zoom-=0.1;
-        if(screen_zoom<0.1) screen_zoom = 0.1;
+        if(screen_zoom<0.5) screen_zoom = 0.5;
     }
     if(right) {
         player.move(1);
         platform.move();
+        screen_center_x += 0.07f;
     }
     if(left){
         player.move(0); 
+        screen_center_x -= 0.07f;
+
     } 
 }
 void tick_elements() {
-    screen_center_x += 0.07f;
+    // screen_center_x += 0.07f;
     player.tick();
     mag.tick(&player);
     pow_speed.tick();
@@ -220,10 +223,9 @@ void reset_screen() {
     float left   = screen_center_x - 4 / screen_zoom;
     float right  = screen_center_x + 4 / screen_zoom;
     if(player.position.x < left + 1) player.position.x = left + 1;
-    if(player.yspeed==0.0f){ 
-        player.position.y = bottom+2.0f;
-        std::cout<<player.position.y<<std::endl;
-    }
+    // if(player.yspeed==0){ 
+    //     player.position.y = bottom+2;
+    // }
     player.miny = bottom+2;
     platform.position.y = bottom;
     pow_speed.miny = bottom;

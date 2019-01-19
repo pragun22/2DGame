@@ -57,8 +57,10 @@ void SpeedUp::tick(){
     
     
     this->position.x += this->xspeed;
-    if(this->position.y > 2-this->miny) this->yspeed = -0.03;
-    else if(this->position.y < this->miny+1) this ->yspeed = 0.03;
+    if(this->position.y > 0-this->miny){
+        this->yspeed = -0.03;
+    }    
+    else if(this->position.y < this->miny+2) this ->yspeed = 0.03;
     this->position.y += this->yspeed;
     
 };
