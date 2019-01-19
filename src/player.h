@@ -7,10 +7,11 @@
 class Player {
 public:
     Player() {}
-    Player(float x, float y, color_t color);
+    Player(float x, float y, color_t color,float bottom);
     glm::vec3 position;
     float rotation;
     float friction;
+    float miny;
     float gravity;
     float yspeed;
     float xspeed;

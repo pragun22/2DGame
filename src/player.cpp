@@ -1,13 +1,14 @@
 #include "player.h"
 #include "main.h"
 
-Player::Player(float x, float y, color_t color) {
+Player::Player(float x, float y, color_t color,float bottom) {
     this->position = glm::vec3(x, y, 0);
     this->rotation = 0;
-    this->friction = 0.95;
-    this->gravity = 0.01;
+    this->friction = 0.95f;
+    this->miny = bottom+2.0f;
+    this->gravity = 0.01f;
     speed = 0.01;
-    this->yspeed = 0;
+    this->yspeed = 0.0f;
     int n = 400;
     int inc = 1;
     const GLfloat vertex_buffer_data[]={
@@ -84,7 +85,7 @@ void Player::jump(){
 void Player::move(int l)
 {
     float factor = 1;
-    if(this->position.y!=-2) factor = 2;
+    if(this->position.y!=(this->miny+2)) factor = 2;
     if(l) this->xspeed = factor*0.075f;
     else this->xspeed = factor*-1*0.075f;
 }
@@ -92,24 +93,24 @@ void Player::move(int l)
 void Player::tick(){
     this->position.x +=this->xspeed;
     this->position.y += this->yspeed;
-    if(this->position.y<-2)
+    if(this->position.y<this->miny)
     {
-        this->yspeed = 0;
-        this->position.y = -2;
+        this->yspeed = 0.0f;
+        this->position.y = this->miny;
     }
-    if(this->yspeed!=0)
+    if(this->yspeed!=0.0f)
     {
-        this->yspeed += -1*0.005;
+        this->yspeed += -1*0.005f;
         // this->yspeed += -1*0.015;
     }
-    if(this->xspeed>0)
+    if(this->xspeed>0.0f)
     {
-        this->xspeed -= 0.010;
-        if(this->xspeed<0) this->xspeed = 0;
+        this->xspeed -= 0.010f;
+        if(this->xspeed<0) this->xspeed = 0.0f;
     }
-    if(this->xspeed<0)
+    if(this->xspeed<0.0f)
     {
-        this->xspeed += 0.010;
-        if(this->xspeed>0) this->xspeed = 0;
+        this->xspeed += 0.010f;
+        if(this->xspeed>0) this->xspeed = 0.0f;
     }
 }

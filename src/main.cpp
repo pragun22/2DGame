@@ -3,6 +3,7 @@
 #include "ball.h"
 #include "player.h"
 #include "magnet.h"
+#include "special.h"
 #include "platform.h"
 using namespace std;
 
@@ -18,6 +19,7 @@ Ball coins[100];
 set<int> del_coins;
 Player player;
 Platform platform;
+SpeedUp pow_speed;
 Magnet mag;
 float score = 0;
 float screen_zoom = 1, screen_center_x = 0, screen_center_y = 0;
@@ -70,6 +72,7 @@ void draw() {
     player.draw(VP);
     platform.draw(VP);
     mag.draw(VP);
+    pow_speed.draw(VP);
     // for(int i = 0; i < 100; i++) {
     //     if(del_coins.find(i)==del_coins.end()) coins[i].draw(VP);
     // }
@@ -85,21 +88,23 @@ void tick_input(GLFWwindow *window) {
         player.jump();  
     }
     if(zoom_in) screen_zoom+=0.1;
-    if(zoom_out) screen_zoom-=0.1;
-    if(right) 
-    {
+    if(zoom_out) {
+        screen_zoom-=0.1;
+        if(screen_zoom<0.1) screen_zoom = 0.1;
+    }
+    if(right) {
         player.move(1);
-        screen_center_x += 0.07f;
         platform.move();
     }
     if(left){
-      player.move(0); 
-      screen_center_x -= 0.07f;
+        player.move(0); 
     } 
 }
 void tick_elements() {
+    screen_center_x += 0.07f;
     player.tick();
     mag.tick(&player);
+    pow_speed.tick();
     // for(int i = 0; i<100;i++)
     // {
     //     bounding_box_t a,b;
@@ -125,9 +130,12 @@ void initGL(GLFWwindow *window, int width, int height) {
     /* Objects should be created before any other gl function and shaders */
     // Create the models
 
-    player = Player(-3,-2, COLOR_BLACK);
-    platform = Platform(-30, -4 , 1);
+    float bottom = screen_center_y - 4 / screen_zoom;
+    std::cout<<bottom<<std::endl;
+    player = Player(-3, bottom + (float)2.0, COLOR_BLACK,bottom);
+    platform = Platform(-30, bottom , 1);
     mag = Magnet(14,4);
+    pow_speed = SpeedUp(5, 3, bottom);
     // for(int i = 0;i<50;i++)
     // {
     //     float x1 = 4.2 +(float)i/2.0;
@@ -211,5 +219,13 @@ void reset_screen() {
     float bottom = screen_center_y - 4 / screen_zoom;
     float left   = screen_center_x - 4 / screen_zoom;
     float right  = screen_center_x + 4 / screen_zoom;
+    if(player.position.x < left + 1) player.position.x = left + 1;
+    if(player.yspeed==0.0f){ 
+        player.position.y = bottom+2.0f;
+        std::cout<<player.position.y<<std::endl;
+    }
+    player.miny = bottom+2;
+    platform.position.y = bottom;
+    pow_speed.miny = bottom;
     Matrices.projection = glm::ortho(left, right, bottom, top, 0.1f, 500.0f);
 }
