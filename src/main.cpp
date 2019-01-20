@@ -73,9 +73,9 @@ void draw() {
     platform.draw(VP);
     mag.draw(VP);
     pow_speed.draw(VP);
-    // for(int i = 0; i < 100; i++) {
-    //     if(del_coins.find(i)==del_coins.end()) coins[i].draw(VP);
-    // }
+    for(int i = 0; i < 100; i++) {
+        if(del_coins.find(i)==del_coins.end()) coins[i].draw(VP);
+    }
 }
 
 void tick_input(GLFWwindow *window) {
@@ -88,20 +88,23 @@ void tick_input(GLFWwindow *window) {
         player.jump();  
     }
     if(zoom_in) {
-        screen_zoom+=0.1;
-        if(screen_zoom>2) screen_zoom = 2;
+        screen_zoom+=0.1f;
+        if(screen_zoom>2.0f) screen_zoom = 2.0f;
     }
     if(zoom_out) {
-        screen_zoom-=0.1;
-        if(screen_zoom<0.5) screen_zoom = 0.5;
+        screen_zoom-=0.1f;
+        if(screen_zoom<0.5f) screen_zoom = 0.5f;
     }
     if(right) {
-        player.move(1);
+        float factor = 1.0f;
+        float right  = screen_center_x + 4.0f / screen_zoom;
+        if(player.position.x >= right - 2.0f) screen_center_x += 0.24f,factor = 2.0f;
+        else screen_center_x += 0.07f;
+        player.move(1,factor);
         platform.move();
-        screen_center_x += 0.07f;
     }
     if(left){
-        player.move(0); 
+        player.move(0,1.0f); 
         screen_center_x -= 0.07f;
 
     } 
@@ -113,22 +116,22 @@ void tick_elements() {
     pow_speed.tick();
     bounding_box_t a;
     a.x = player.position.x;
-    a.y = player.position.y-1;
-    a.width = 1;
-    a.height = 2.4;
-    // for(int i = 0; i<100;i++)
-    // {
-    //     bounding_box_t b;
-    //     b.x = coins[i].position.x-0.2;
-    //     b.y = coins[i].position.y-0.2;
-    //     b.width = 0.4;
-    //     b.height = 0.4;
-    //     if(detect_collision(a,b))
-    //     {
-    //         // cout<<a.x<<"--"<<coins[i].position.x<<endl;
-    //         del_coins.insert(i); 
-    //     }
-    // }
+    a.y = player.position.y-1.0f;
+    a.width = 1.0f;
+    a.height = 2.4f;
+    for(int i = 0; i<100;i++)
+    {
+        bounding_box_t b;
+        b.x = coins[i].position.x-0.2f;
+        b.y = coins[i].position.y-0.2f;
+        b.width = 0.4;
+        b.height = 0.4;
+        if(detect_collision(a,b))
+        {
+            // cout<<a.x<<"--"<<coins[i].position.x<<endl;
+            del_coins.insert(i); 
+        }
+    }
 }
 
 /* Initialize the OpenGL rendering properties */
@@ -137,23 +140,23 @@ void initGL(GLFWwindow *window, int width, int height) {
     /* Objects should be created before any other gl function and shaders */
     // Create the models
 
-    float bottom = screen_center_y - 4 / screen_zoom;
+    float bottom = screen_center_y - 4.0f / screen_zoom;
     std::cout<<bottom<<std::endl;
-    player = Player(-3, bottom + (float)2.0, COLOR_BLACK,bottom);
-    platform = Platform(-30, bottom , 1);
-    mag = Magnet(14,4);
-    pow_speed = SpeedUp(5, 3, bottom);
+    player = Player(-3.0f, -2.0f, COLOR_BLACK,bottom);
+    platform = Platform(-30.0f, bottom , 1);
+    mag = Magnet(14.0f,4.0f);
+    pow_speed = SpeedUp(5.0f, 3.0f, bottom);
     for(int i = 0;i<50;i++)
     {
-        float x1 = 94.2 +(float)i/2.0;
+        float x1 = 94.2 +(float)i/2.0f;
         if(i<25)
         {
-            coins[i] = Ball(x1, 2, COLOR_COIN,0.2);
-            coins[99-i] = Ball(x1 , 2.5, COLOR_COIN,0.2);
+            coins[i] = Ball(x1, 2.0f, COLOR_COIN,0.2f);
+            coins[99-i] = Ball(x1 , 2.5f, COLOR_COIN,0.2f);
         }
         else{
-            coins[i] = Ball(x1,2.5,COLOR_COIN,0.2);
-            coins[99-i] = Ball(x1 , 3, COLOR_COIN,0.2);
+            coins[i] = Ball(x1,2.5f,COLOR_COIN,0.2f);
+            coins[99-i] = Ball(x1 , 3.0f, COLOR_COIN,0.2f);
         }
     }
     // Create and compile our GLSL program from the shaders
@@ -203,9 +206,12 @@ int main(int argc, char **argv) {
             // std::cout<<score<<std::endl;
             // renderBitmapString(0,0,buffer);
             // printText2D(buffer,10,500,60);
-            tick_elements();
             tick_input(window);
+            std::cout<<"after"<<player.position.x<<std::endl;
+            tick_elements();
             reset_screen();
+            std::cout<<"after"<<player.position.x<<std::endl;
+
         }
 
         // Poll for Keyboard and mouse events
@@ -226,12 +232,12 @@ void reset_screen() {
     float bottom = screen_center_y - 4 / screen_zoom;
     float left   = screen_center_x - 4 / screen_zoom;
     float right  = screen_center_x + 4 / screen_zoom;
-    if(player.position.x < left + 1) player.position.x = left + 1;
-    if(player.position.x > right - 1) player.position.x = right - 1;
+    if(player.position.x < left + 1.0f) player.position.x = left + 1.0f;
+    if(player.position.x > right - 1.0f) player.position.x = right - 1.0f;
     // if(player.yspeed==0){ 
     //     player.position.y = bottom+2;
     // }
-    player.miny = bottom+2;
+    player.miny = bottom+2.0f;
     platform.position.y = bottom;
     pow_speed.miny = bottom;
     Matrices.projection = glm::ortho(left, right, bottom, top, 0.1f, 500.0f);

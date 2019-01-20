@@ -82,12 +82,12 @@ void Player::set_position(float x, float y) {
 void Player::jump(){
     this->yspeed = 0.215f;
 }
-void Player::move(int l)
+void Player::move(int l,float fact)
 {
-    float factor = 1;
-    if(this->position.y!=(this->miny+2)) factor = 2;
-    if(l) this->xspeed = factor*0.075f;
-    else this->xspeed = factor*-1*0.075f;
+    float factor = 1.0f;
+    if(this->position.y!=(this->miny+2.0f)) factor = 2.0f;
+    if(l) this->xspeed = factor*0.075f*fact;
+    else this->xspeed = factor*-1*0.075f*fact;
 }
 
 void Player::tick(){

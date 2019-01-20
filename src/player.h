@@ -18,7 +18,7 @@ public:
     void draw(glm::mat4 VP);
     void set_position(float x, float y);
     void jump();
-    void move(int l);
+    void move(int l,float factor);
     void tick();
     double speed;
 private:
