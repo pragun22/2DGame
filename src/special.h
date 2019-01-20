@@ -23,10 +23,11 @@ private:
 class CoinsUp {
 public:
     CoinsUp() {}
-    CoinsUp(float x, float y);
+    CoinsUp(float x, float y, float bottom);
     glm::vec3 position;
     float rotation;
     float yspeed;
+    float miny;
     float xspeed;
     void draw(glm::mat4 VP);
     void set_position(float x, float y);

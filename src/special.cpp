@@ -65,11 +65,12 @@ void SpeedUp::tick(){
     
 };
 
-CoinsUp::CoinsUp(float x, float y) {
+CoinsUp::CoinsUp(float x, float y,float bottom) {
     this->position = glm::vec3(x, y, 0);
-    this->rotation = 0;
+    this->rotation = 90.0f;
     speed = 0.01;
     this->yspeed = 0.1;
+    this->miny = bottom+2;
     this->xspeed = -0.03;
     int n = 5;
     int inc = 1;
@@ -92,13 +93,13 @@ CoinsUp::CoinsUp(float x, float y) {
 	}
     // const GLfloat color_buffer[]={
     // };
-    this->object = create3DObject(GL_TRIANGLES, 3*n, vertex_buffer_data, COLOR_ORANGE, GL_FILL);
+    this->object = create3DObject(GL_TRIANGLES, 3*n, vertex_buffer_data, COLOR_BLACK, GL_FILL);
 }
 
 void CoinsUp::draw(glm::mat4 VP) {
     Matrices.model = glm::mat4(1.0f);
     glm::mat4 translate = glm::translate (this->position);    // glTranslatef
-    glm::mat4 rotate    = glm::rotate((float) (this->rotation * M_PI / 180.0f), glm::vec3(1, 0, 0));
+    glm::mat4 rotate    = glm::rotate((float) (this->rotation * M_PI / 180.0f), glm::vec3(0, 0, 1));
     // No need as coords centered at 0, 0, 0 of cube arouund which we waant to rotate
     // rotate          = rotate * glm::translate(glm::vec3(0, -0.6, 0));
     Matrices.model *= (translate * rotate);
@@ -121,8 +122,10 @@ void CoinsUp::tick(){
     
     
     this->position.x += this->xspeed;
-    if(this->position.y > 4) this->yspeed = -0.03;
-    else if(this->position.y < -2) this ->yspeed = 0.03;
+    if(this->position.y > 0-this->miny){
+        this->yspeed = -0.03;
+    }    
+    else if(this->position.y < this->miny+2) this ->yspeed = 0.03;
     this->position.y += this->yspeed;
     
 };

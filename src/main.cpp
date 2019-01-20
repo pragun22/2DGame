@@ -20,6 +20,7 @@ set<int> del_coins;
 Player player;
 Platform platform;
 std::vector<SpeedUp> speeds;
+std::vector<CoinsUp> pow_coins;
 Magnet mag;
 float score = 0;
 float screen_zoom = 1, screen_center_x = 0, screen_center_y = 0;
@@ -75,6 +76,9 @@ void draw() {
     for(int i = 0; i < speeds.size() ; i++){
         speeds[i].draw(VP);
     }
+    for(int i = 0; i < pow_coins.size() ; i++){
+        pow_coins[i].draw(VP);
+    }
     for(int i = 0; i < 100; i++) {
         if(del_coins.find(i)==del_coins.end()) coins[i].draw(VP);
     }
@@ -100,7 +104,7 @@ void tick_input(GLFWwindow *window) {
     if(right) {
         float factor = 1.0f;
         float right  = screen_center_x + 4.0f / screen_zoom;
-        if(player.position.x >= right - 2.0f) screen_center_x += 0.24f,factor = 2.0f;
+        if(player.position.x >= screen_center_x + 1 ) screen_center_x += 0.24f,factor = 2.0f;
         else screen_center_x += 0.07f;
         player.move(1,factor);
         platform.move();
@@ -116,6 +120,7 @@ void tick_elements() {
     player.tick();
     mag.tick(&player);
     for(int i = 0 ; i < speeds.size(); i++) speeds[i].tick();
+    for(int i = 0 ; i < pow_coins.size(); i++) pow_coins[i].tick();
     bounding_box_t a;
     a.x = player.position.x;
     a.y = player.position.y-1.0f;
@@ -146,6 +151,18 @@ void tick_elements() {
             delete S;
         }
     }
+    for(int i = 0 ; i< pow_coins.size();i++){
+        bounding_box_t pow;
+        pow.x = pow_coins[i].position.x - 0.6f*cos(M_PI/5.0f);
+        pow.y = pow_coins[i].position.y - 0.6f*sin(M_PI/5.0f);
+        pow.height = (0.6f + 0.6f*cos(M_PI/5.0f));
+        pow.width = (0.6f + 0.6f*cos(M_PI/5.0f));
+        if(detect_collision(a,pow)){
+            CoinsUp* S = &pow_coins[i];
+            pow_coins.erase(pow_coins.begin()+i);
+            delete S;
+        }
+    }
 }
 
 /* Initialize the OpenGL rendering properties */
@@ -161,6 +178,7 @@ void initGL(GLFWwindow *window, int width, int height) {
     mag = Magnet(14.0f,4.0f);
     SpeedUp pow_speed = SpeedUp(5.0f, 3.0f, bottom);
     speeds.push_back(pow_speed);
+    pow_coins.push_back(CoinsUp(10.0f, 0.0f, bottom));
     for(int i = 0;i<50;i++)
     {
         float x1 = 94.2 +(float)i/2.0f;
@@ -246,7 +264,7 @@ void reset_screen() {
     float left   = screen_center_x - 4 / screen_zoom;
     float right  = screen_center_x + 4 / screen_zoom;
     if(player.position.x < left + 1.0f) player.position.x = left + 1.0f;
-    if(player.position.x > right - 1.0f) player.position.x = right - 1.0f;
+    if(player.position.x > screen_center_x + 1.0f ) player.position.x = screen_center_x + 1.0f;
     // if(player.yspeed==0){ 
     //     player.position.y = bottom+2;
     // }
@@ -254,6 +272,9 @@ void reset_screen() {
     platform.position.y = bottom;
     for(int i = 0  ; i < speeds.size() ; i++){
         speeds[i].miny = bottom;
+    }
+    for(int i = 0  ; i < pow_coins.size() ; i++){
+        pow_coins[i].miny = bottom;
     }
     Matrices.projection = glm::ortho(left, right, bottom, top, 0.1f, 500.0f);
 }
