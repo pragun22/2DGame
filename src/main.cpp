@@ -22,6 +22,7 @@ Player player;
 Platform platform;
 std::vector<SpeedUp> speeds;
 std::vector<Firelines> firelines;
+std::vector<Firebeams> firebeams;
 std::vector<CoinsUp> pow_coins;
 Magnet mag;
 float score = 0;
@@ -75,7 +76,8 @@ void draw() {
     player.draw(VP);
     platform.draw(VP);
     mag.draw(VP);
-    firelines[0].draw(VP);
+    for(int i = 0 ; i<firelines.size();i++) firelines[i].draw(VP);
+    for(int i = 0 ; i<firebeams.size();i++) firebeams[i].draw(VP);
     for(int i = 0; i < speeds.size() ; i++){
         speeds[i].draw(VP);
     }
@@ -183,6 +185,7 @@ void initGL(GLFWwindow *window, int width, int height) {
     speeds.push_back(pow_speed);
     pow_coins.push_back(CoinsUp(10.0f, 0.0f, bottom));
     firelines.push_back(Firelines(3,2));
+    firebeams.push_back(Firebeams(2,1));
     for(int i = 0;i<50;i++)
     {
         float x1 = 94.2 +(float)i/2.0f;
