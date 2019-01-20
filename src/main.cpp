@@ -111,13 +111,14 @@ void tick_elements() {
     player.tick();
     mag.tick(&player);
     pow_speed.tick();
+    bounding_box_t a;
+    a.x = player.position.x;
+    a.y = player.position.y-1;
+    a.width = 1;
+    a.height = 2.4;
     // for(int i = 0; i<100;i++)
     // {
-    //     bounding_box_t a,b;
-    //     a.x = player.position.x;
-    //     a.y = player.position.y-1;
-    //     a.width = 1;
-    //     a.height = 2.4;
+    //     bounding_box_t b;
     //     b.x = coins[i].position.x-0.2;
     //     b.y = coins[i].position.y-0.2;
     //     b.width = 0.4;
