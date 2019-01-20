@@ -4,6 +4,7 @@
 #include "player.h"
 #include "magnet.h"
 #include "special.h"
+#include "enemies.h"
 #include "platform.h"
 using namespace std;
 
@@ -20,10 +21,11 @@ set<int> del_coins;
 Player player;
 Platform platform;
 std::vector<SpeedUp> speeds;
+std::vector<Firelines> firelines;
 std::vector<CoinsUp> pow_coins;
 Magnet mag;
 float score = 0;
-float screen_zoom = 1, screen_center_x = 0, screen_center_y = 0;
+float screen_zoom = 0.5f, screen_center_x = 0, screen_center_y = 0;
 float camera_rotation_angle = 0;
 int pos = 0;
 
@@ -73,6 +75,7 @@ void draw() {
     player.draw(VP);
     platform.draw(VP);
     mag.draw(VP);
+    firelines[0].draw(VP);
     for(int i = 0; i < speeds.size() ; i++){
         speeds[i].draw(VP);
     }
@@ -179,6 +182,7 @@ void initGL(GLFWwindow *window, int width, int height) {
     SpeedUp pow_speed = SpeedUp(5.0f, 3.0f, bottom);
     speeds.push_back(pow_speed);
     pow_coins.push_back(CoinsUp(10.0f, 0.0f, bottom));
+    firelines.push_back(Firelines(3,2));
     for(int i = 0;i<50;i++)
     {
         float x1 = 94.2 +(float)i/2.0f;
@@ -236,9 +240,6 @@ int main(int argc, char **argv) {
             score += float(1*float(1/60));
             char buffer[256];
             sprintf(buffer,"SCORE :  %.2f",score);
-            // std::cout<<score<<std::endl;
-            // renderBitmapString(0,0,buffer);
-            // printText2D(buffer,10,500,60);
             tick_input(window);
             tick_elements();
             reset_screen();
