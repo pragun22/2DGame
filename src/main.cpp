@@ -87,7 +87,10 @@ void tick_input(GLFWwindow *window) {
     if (up) {
         player.jump();  
     }
-    if(zoom_in) screen_zoom+=0.1;
+    if(zoom_in) {
+        screen_zoom+=0.1;
+        if(screen_zoom>2) screen_zoom = 2;
+    }
     if(zoom_out) {
         screen_zoom-=0.1;
         if(screen_zoom<0.5) screen_zoom = 0.5;
@@ -139,19 +142,19 @@ void initGL(GLFWwindow *window, int width, int height) {
     platform = Platform(-30, bottom , 1);
     mag = Magnet(14,4);
     pow_speed = SpeedUp(5, 3, bottom);
-    // for(int i = 0;i<50;i++)
-    // {
-    //     float x1 = 4.2 +(float)i/2.0;
-    //     if(i<25)
-    //     {
-    //         coins[i] = Ball(x1, 2, COLOR_COIN,0.2);
-    //         coins[99-i] = Ball(x1 , 7.5, COLOR_COIN,0.2);
-    //     }
-    //     else{
-    //         coins[i] = Ball(x1,2.5,COLOR_COIN,0.2);
-    //         coins[99-i] = Ball(x1 , 7.5, COLOR_COIN,0.2);
-    //     }
-    // }
+    for(int i = 0;i<50;i++)
+    {
+        float x1 = 94.2 +(float)i/2.0;
+        if(i<25)
+        {
+            coins[i] = Ball(x1, 2, COLOR_COIN,0.2);
+            coins[99-i] = Ball(x1 , 2.5, COLOR_COIN,0.2);
+        }
+        else{
+            coins[i] = Ball(x1,2.5,COLOR_COIN,0.2);
+            coins[99-i] = Ball(x1 , 3, COLOR_COIN,0.2);
+        }
+    }
     // Create and compile our GLSL program from the shaders
     programID = LoadShaders("Sample_GL.vert", "Sample_GL.frag");
     // Get a handle for our "MVP" uniform
@@ -223,6 +226,7 @@ void reset_screen() {
     float left   = screen_center_x - 4 / screen_zoom;
     float right  = screen_center_x + 4 / screen_zoom;
     if(player.position.x < left + 1) player.position.x = left + 1;
+    if(player.position.x > right - 1) player.position.x = right - 1;
     // if(player.yspeed==0){ 
     //     player.position.y = bottom+2;
     // }
