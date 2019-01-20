@@ -19,7 +19,7 @@ Ball coins[100];
 set<int> del_coins;
 Player player;
 Platform platform;
-SpeedUp pow_speed;
+std::vector<SpeedUp> speeds;
 Magnet mag;
 float score = 0;
 float screen_zoom = 1, screen_center_x = 0, screen_center_y = 0;
@@ -72,7 +72,9 @@ void draw() {
     player.draw(VP);
     platform.draw(VP);
     mag.draw(VP);
-    pow_speed.draw(VP);
+    for(int i = 0; i < speeds.size() ; i++){
+        speeds[i].draw(VP);
+    }
     for(int i = 0; i < 100; i++) {
         if(del_coins.find(i)==del_coins.end()) coins[i].draw(VP);
     }
@@ -113,7 +115,7 @@ void tick_elements() {
     // screen_center_x += 0.07f;
     player.tick();
     mag.tick(&player);
-    pow_speed.tick();
+    for(int i = 0 ; i < speeds.size(); i++) speeds[i].tick();
     bounding_box_t a;
     a.x = player.position.x;
     a.y = player.position.y-1.0f;
@@ -132,6 +134,18 @@ void tick_elements() {
             del_coins.insert(i); 
         }
     }
+    for(int i = 0 ; i< speeds.size();i++){
+        bounding_box_t pow;
+        pow.x = speeds[i].position.x - 0.6f*cos(M_PI/5.0f);
+        pow.y = speeds[i].position.y - 0.6f*sin(M_PI/5.0f);
+        pow.height = (0.6f + 0.6f*cos(M_PI/5.0f));
+        pow.width = (0.6f + 0.6f*cos(M_PI/5.0f));
+        if(detect_collision(a,pow)){
+            SpeedUp* S = &speeds[i];
+            speeds.erase(speeds.begin()+i);
+            delete S;
+        }
+    }
 }
 
 /* Initialize the OpenGL rendering properties */
@@ -145,7 +159,8 @@ void initGL(GLFWwindow *window, int width, int height) {
     player = Player(-3.0f, -2.0f, COLOR_BLACK,bottom);
     platform = Platform(-30.0f, bottom , 1);
     mag = Magnet(14.0f,4.0f);
-    pow_speed = SpeedUp(5.0f, 3.0f, bottom);
+    SpeedUp pow_speed = SpeedUp(5.0f, 3.0f, bottom);
+    speeds.push_back(pow_speed);
     for(int i = 0;i<50;i++)
     {
         float x1 = 94.2 +(float)i/2.0f;
@@ -207,10 +222,8 @@ int main(int argc, char **argv) {
             // renderBitmapString(0,0,buffer);
             // printText2D(buffer,10,500,60);
             tick_input(window);
-            std::cout<<"after"<<player.position.x<<std::endl;
             tick_elements();
             reset_screen();
-            std::cout<<"after"<<player.position.x<<std::endl;
 
         }
 
@@ -239,6 +252,8 @@ void reset_screen() {
     // }
     player.miny = bottom+2.0f;
     platform.position.y = bottom;
-    pow_speed.miny = bottom;
+    for(int i = 0  ; i < speeds.size() ; i++){
+        speeds[i].miny = bottom;
+    }
     Matrices.projection = glm::ortho(left, right, bottom, top, 0.1f, 500.0f);
 }
