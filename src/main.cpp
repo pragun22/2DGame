@@ -77,7 +77,7 @@ void draw() {
     platform.draw(VP);
     mag.draw(VP);
     for(int i = 0 ; i<firelines.size();i++) firelines[i].draw(VP);
-    for(int i = 0 ; i<firebeams.size();i++) firebeams[i].draw(VP);
+    for(int i = 0 ; i<firebeams.size();i++) if(firebeams[i].flag) firebeams[i].draw(VP);
     for(int i = 0; i < speeds.size() ; i++){
         speeds[i].draw(VP);
     }
@@ -131,6 +131,7 @@ void tick_elements() {
     a.y = player.position.y-1.0f;
     a.width = 1.0f;
     a.height = 2.4f;
+    for(int i =0; i < firebeams.size(); i++) firebeams[i].tick(&player);
     for(int i = 0; i<100;i++)
     {
         bounding_box_t b;
@@ -168,14 +169,21 @@ void tick_elements() {
             delete S;
         }
     }
+    for(int i = 0; i < firebeams.size(); i++)
+    {
+        bounding_box_t fire;
+        fire.x = 0.2f*4 + firebeams[i].position.x;
+        fire.y = firebeams[i].position.y - 0.4f*0.9;
+        fire.width = 3.0f*4;
+        fire.height = 0.8f*0.9;
+        if(detect_collision(a,fire)) std::cout<<"kat gaya"<<std::endl;
+    }
 }
-
 /* Initialize the OpenGL rendering properties */
 /* Add all the models to be created here */
 void initGL(GLFWwindow *window, int width, int height) {
     /* Objects should be created before any other gl function and shaders */
     // Create the models
-
     float bottom = screen_center_y - 4.0f / screen_zoom;
     std::cout<<bottom<<std::endl;
     player = Player(-3.0f, -2.0f, COLOR_BLACK,bottom);
@@ -184,8 +192,9 @@ void initGL(GLFWwindow *window, int width, int height) {
     SpeedUp pow_speed = SpeedUp(5.0f, 3.0f, bottom);
     speeds.push_back(pow_speed);
     pow_coins.push_back(CoinsUp(10.0f, 0.0f, bottom));
-    firelines.push_back(Firelines(3,2));
-    firebeams.push_back(Firebeams(2,1));
+    // firelines.push_back(Firelines(3,2));
+    firebeams.push_back(Firebeams(2,5));
+    firebeams.push_back(Firebeams(2,-3));
     for(int i = 0;i<50;i++)
     {
         float x1 = 94.2 +(float)i/2.0f;
@@ -230,12 +239,28 @@ int main(int argc, char **argv) {
     initGL (window, width, height);
     glutInit(&argc, argv);
     /* Draw in loop */
+    clock_t start = clock();
     while (!glfwWindowShouldClose(window)) {
         // Process timers
 
         if (t60.processTick()) {
+            std::cout<<"tick"<<std::endl;
             // 60 fps
             // OpenGL Draw commands
+            clock_t end = clock();
+            int timer = ((int) (end - start)) / CLOCKS_PER_SEC;
+            int random1 = rand()%932;
+            int random2 = rand()%932;
+            if(true){   
+            // if(abs(random1 - random2)==0){
+                for(int i = 0 ; i < firebeams.size() ; i++){
+                    
+                    if(!firebeams[i].flag){
+                        firebeams[i].flag = true;
+                        firebeams[i].time = end;
+                    }
+                }
+            }
             draw();
             // Swap Frame Buffer in double buffering
             glfwSwapBuffers(window);
@@ -248,7 +273,6 @@ int main(int argc, char **argv) {
             reset_screen();
 
         }
-
         // Poll for Keyboard and mouse events
         glfwPollEvents();
     }

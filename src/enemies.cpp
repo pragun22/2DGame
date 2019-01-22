@@ -81,6 +81,8 @@ void Firelines::tick(){
 Firebeams::Firebeams(float x, float y) {
     this->position = glm::vec3(x, y, 0);
     this->rotation = 0.0f;
+    this->flag = false;
+    this->time = clock();
     const GLfloat vertex_buffer_data[]={
         0, 0 ,0,
         0.2f, 1, 0,
@@ -150,5 +152,26 @@ void Firebeams::draw(glm::mat4 VP) {
 void Firebeams::set_position(float x, float y) {
     this->position = glm::vec3(x, y, 0);
 }
-void Firebeams::tick(){
+void Firebeams::tick(Player* hooman){
+    bounding_box_t side1,b;
+    side1.x =this->position.x;
+    side1.y =this->position.y - 0.9f;
+    side1.height = 2*0.9f;
+    side1.width = 4 * 0.2f;
+    b.x = hooman->position.x;
+    b.y = hooman->position.y-1;
+    b.width = 1;
+    b.height = 2.4;
+    float tempx = b.x, tempy = b.y;
+    if(detect_collision(side1,b))
+    {
+        hooman->position.x = tempx;
+        hooman->position.y = tempy;
+    }
+    if(hooman->position.x - 8.0f>this->position.x) this->position.x = hooman->position.x - 8.0f;
+    if(this->flag){
+        clock_t end = clock();
+        int timer = ((int) (end - this->time)) / CLOCKS_PER_SEC;
+        if(timer>=10) this->flag = false;
+    }
 }
