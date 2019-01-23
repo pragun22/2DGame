@@ -3,6 +3,7 @@
 #include "ball.h"
 #include "player.h"
 #include "magnet.h"
+#include "balloon.h"
 #include "special.h"
 #include "enemies.h"
 #include "platform.h"
@@ -24,6 +25,7 @@ std::vector<SpeedUp> speeds;
 std::vector<Firelines> firelines;
 std::vector<Firebeams> firebeams;
 std::vector<CoinsUp> pow_coins;
+std::vector<Balloon> balloons;
 vector<Boomerang> boomerang;
 Magnet mag;
 float score = 0;
@@ -72,6 +74,7 @@ void draw() {
     for(int i = 0 ; i<firelines.size();i++) firelines[i].draw(VP);
     for(int i = 0 ; i<boomerang.size();i++) boomerang[i].draw(VP);
     for(int i = 0 ; i<firebeams.size();i++) if(firebeams[i].flag) firebeams[i].draw(VP);
+    for(int i = 0 ; i<balloons.size();i++) balloons[i].draw(VP);
     for(int i = 0; i < speeds.size() ; i++){
         speeds[i].draw(VP);
     }
@@ -89,6 +92,10 @@ void tick_input(GLFWwindow *window) {
     int up = glfwGetKey(window, GLFW_KEY_SPACE);
     int zoom_in = glfwGetKey(window, GLFW_KEY_UP);
     int zoom_out = glfwGetKey(window, GLFW_KEY_DOWN);
+    int ball = glfwGetKey(window, GLFW_KEY_B, GLFW_PRESS);
+    if(ball ){
+        balloons.push_back(Balloon(player.position.x+1, player.position.y+1));
+    }
     if (up) {
         player.jump();  
     }
