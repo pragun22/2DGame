@@ -74,7 +74,9 @@ void draw() {
     for(int i = 0 ; i<firelines.size();i++) firelines[i].draw(VP);
     for(int i = 0 ; i<boomerang.size();i++) boomerang[i].draw(VP);
     for(int i = 0 ; i<firebeams.size();i++) if(firebeams[i].flag) firebeams[i].draw(VP);
-    for(int i = 0 ; i<balloons.size();i++) balloons[i].draw(VP);
+    for(int i = 0 ; i<balloons.size();i++){
+        balloons[i].draw(VP);
+    } 
     for(int i = 0; i < speeds.size() ; i++){
         speeds[i].draw(VP);
     }
@@ -92,9 +94,9 @@ void tick_input(GLFWwindow *window) {
     int up = glfwGetKey(window, GLFW_KEY_SPACE);
     int zoom_in = glfwGetKey(window, GLFW_KEY_UP);
     int zoom_out = glfwGetKey(window, GLFW_KEY_DOWN);
-    int ball = glfwGetKey(window, GLFW_KEY_B, GLFW_PRESS);
-    if(ball ){
-        balloons.push_back(Balloon(player.position.x+1, player.position.y+1));
+    int ball = glfwGetKey(window, GLFW_KEY_B);
+    if(ball){
+        balloons.push_back(Balloon(player.position.x+1, player.position.y+1,player.xspeed,player.yspeed));
     }
     if (up) {
         player.jump();  
@@ -140,7 +142,22 @@ void tick_elements() {
         field.height = 5.0f;
         if(detect_collision(a,field)) firelines[i].detect_collision(a);
     } 
-    
+    for(int i = 0; i < balloons.size(); i++)
+    {
+        balloons[i].tick();   
+        if(firebeams.size()>0)
+        {
+            bounding_box_t fire;
+            fire.x = 0.2f*4 + firebeams[0].position.x;
+            fire.y = firebeams[0].position.y - 0.4f*0.9;
+            fire.width = 3.0f*4;
+            fire.height = 0.8f*0.9;
+            if(balloons[i].detect_collision(fire)){
+            cout<<"awwlele jal gaya "<<rand()<<endl;
+            balloons.erase(balloons.begin()+i);
+            }
+        }
+    }
     for(int i =0; i < boomerang.size(); i++){
         boomerang[i].tick();
         bounding_box_t boomer;
@@ -182,7 +199,7 @@ void tick_elements() {
         fire.y = firebeams[i].position.y - 0.4f*0.9;
         fire.width = 3.0f*4;
         fire.height = 0.8f*0.9;
-        if(detect_collision(a,fire)) std::cout<<"kat gaya"<<std::endl;
+        if(detect_collision(a,fire)) std::cout<<"kat gaya "<<rand()<<std::endl;
     }
     for(int i = 0; i<100;i++)
     {
@@ -212,8 +229,7 @@ void initGL(GLFWwindow *window, int width, int height) {
     speeds.push_back(pow_speed);
     pow_coins.push_back(CoinsUp(10.0f, 0.0f, bottom));
     firelines.push_back(Firelines(3,2));
-    // firebeams.push_back(Firebeams(2, 5));
-    // firebeams.push_back(Firebeams(2, -3));
+    // firebeams.push_back(Firebeams(2, 6));
     boomerang.push_back(Boomerang(2.0f,2.0f, 3.0f, 0.0f));
     for(int i = 0;i<50;i++)
     {
@@ -257,7 +273,6 @@ int main(int argc, char **argv) {
     int width  = 600;
     int height = 600;
     window = initGLFW(width, height);
-// initText2D( "Holstein.DDS" );
     initGL (window, width, height);
     /* Draw in loop */
     clock_t start = clock();
@@ -294,6 +309,7 @@ int main(int argc, char **argv) {
         }
         // Poll for Keyboard and mouse events
         glfwPollEvents();
+        // glfwWaitEventsTimeout(0.01);
     }
 
     quit(window);

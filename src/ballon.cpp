@@ -1,11 +1,15 @@
 #include "balloon.h"
-Balloon::Balloon(float x, float y) {
+Balloon::Balloon(float x, float y, float a,float b) {
     this->position = glm::vec3(x, y, 0);
     this->rotation = 0;
+    this->xspeed = (float)a + 0.01f;
+    this->yspeed = (float)b + 0.05f;
+    this->xthrust = (float)a;
+    this->ythrust = (float)b;
     speed = 0.01;
     int n = 400;
     int inc = 1;
-    float r = 0.1f ;
+    float r = 0.4f ;
     GLfloat vertex_buffer_data[9*n];
 	for (int i = 0; i < 9*n; i+=9)
 	{
@@ -23,6 +27,12 @@ Balloon::Balloon(float x, float y) {
 		inc++;
 	}
     this->object = create3DObject(GL_TRIANGLES, 3*n, vertex_buffer_data, COLOR_BLUE, GL_FILL);
+    if(this->xthrust < 0.14f) this->xspeed = 0.2f;
+    if(this->ythrust < 0.04f) this->yspeed = 0.1f;
+    if(this->xthrust < 0.00f) this->xspeed = this->xthrust - 0.04f;
+    if(this->ythrust < 0.00f) this->yspeed = this->ythrust + 0.18f;
+
+
 }
 
 void Balloon::draw(glm::mat4 VP) {
@@ -38,4 +48,21 @@ void Balloon::draw(glm::mat4 VP) {
 }
 
 void Balloon::tick(){
+    // std::cout<<this->xthrust<<std::endl;
+    this->position.x += this->xspeed;
+    this->position.y += this->yspeed;
+    // if(this->yspeed!=0.0f){
+        this->yspeed += -1*0.006f;
+    // }
+}
+bool Balloon::detect_collision(bounding_box_t a){
+    float r = 0.4f;
+    bounding_box_t b;
+    b.x = a.x - r;
+    b.y = a.y - r;
+    b.height = r;
+    b.width = r; 
+    bool x = a.x + a.width >= b.x && b.x + b.width >= a.x?true:false;
+    bool y = a.y + a.height >= b.y && b.y + b.height >= a.y?true:false;
+    return (x && y);
 }
