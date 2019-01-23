@@ -8,27 +8,27 @@ Firelines::Firelines(float x, float y) {
     int inc = 1;
     const GLfloat vertex_buffer_data[]={
         0, 0 ,0,
-        0, 3, 0,
-        1, 3, 0,
+        0, 2.2f, 0,
+        1, 2.2f, 0,
 
         0, 0, 0,
         1, 0, 0,
-        1, 3, 0, /* left dumble */
+        1, 2.2f, 0, /* left dumble */
 
-        1, 1, 0,
-        4, 1, 0,
+        1, 0.2f, 0,
+        4, 0.2f, 0,
         1 ,2 ,0,
 
-        4, 1, 0,
+        4, 0.2f, 0,
         4, 2, 0,
         1, 2, 0, // middle body
 
         4, 0, 0,
         5, 0, 0,
-        4, 3 ,0,
+        4, 2.2f ,0,
 
-        4, 3, 0,
-        5, 3, 0,
+        4, 2.2f, 0,
+        5, 2.2f, 0,
         5, 0, 0 /* right dumble */
     };
     const GLfloat color_buffer[]={
@@ -62,7 +62,7 @@ Firelines::Firelines(float x, float y) {
 void Firelines::draw(glm::mat4 VP) {
     Matrices.model = glm::mat4(1.0f);
     glm::mat4 translate = glm::translate (this->position);    // glTranslatef
-    glm::mat4 scale = glm::scale (glm::vec3(1.3,0.45,0));    // glScalef
+    glm::mat4 scale = glm::scale (glm::vec3(1.5,0.45,0));    // glScalef
     glm::mat4 rotate    = glm::rotate((float) (this->rotation * M_PI / 180.0f), glm::vec3(0, 0, 1));
     // No need as coords centered at 0, 0, 0 of cube arouund which we waant to rotate
     // rotate          = rotate * glm::translate(glm::vec3(0, -0.6, 0));
@@ -76,6 +76,44 @@ void Firelines::set_position(float x, float y) {
     this->position = glm::vec3(x, y, 0);
 }
 void Firelines::tick(){
+}
+bool Firelines::detect_collision(bounding_box_t a){
+    float m = -1.0f * tan((float) (this->rotation * M_PI / 180.0f));
+    float c = this->position.y + this->position.x*m;
+    float normaliser = sqrt(1 + m*m);
+    for(int i = a.y ; i < a.y+a.height ; i++){
+        float dist  = ((a.x+a.width)*m + i - c)/normaliser;
+        if(abs(dist)<0.1){
+            std::cout<<a.x<<" -right se kata- "<<i<<" "<<dist<<std::endl;
+            exit(0);
+        } 
+    }
+    for(int i = a.y ; i < a.y+a.height ; i++){
+        float dist  = (a.x*m + i - c)/normaliser;
+        if(abs(dist)<0.1){
+            std::cout<<a.x<<" -left se kata- "<<i<<" "<<dist<<std::endl;
+            exit(0);
+
+        } 
+    }
+    float c2 = 2.2f*normaliser - c;
+    for(int i = a.y ; i < a.y+a.height ; i++){
+        float dist  = ((a.x+a.width)*m + i - c2)/normaliser;
+        if(abs(dist)<0.1){
+            std::cout<<a.x<<" -right se kata- "<<i<<" "<<dist<<std::endl;
+            exit(0);
+
+        } 
+    }
+    for(int i = a.y ; i < a.y+a.height ; i++){
+        float dist  = (a.x*m + i - c2)/normaliser;
+        if(abs(dist)<0.1){
+            std::cout<<a.x<<" -left se kata- "<<i<<" "<<dist<<std::endl;
+            exit(0);
+        } 
+    }
+    
+    return true;
 }
 
 Firebeams::Firebeams(float x, float y) {
@@ -174,4 +212,45 @@ void Firebeams::tick(Player* hooman){
         int timer = ((int) (end - this->time)) / CLOCKS_PER_SEC;
         if(timer>=10) this->flag = false;
     }
+}
+
+Boomerang::Boomerang(float x, float y, float cen_x, float cen_y){
+    this->position = glm::vec3(x, y, 0);
+    this->rotation = 0.0f;
+    this->degree = 0.0f;
+    this->x = cen_x;
+    this->y = cen_y;
+    const GLfloat vertex_buffer_data[]={
+        0.3f, 0, 0,
+        -1, 0, 0,
+        -1, -1, 0,
+
+        -0.3f, 0, 0,
+        1, 0, 0,
+        1, -1, 0
+    };
+    // const GLfloat color_buffer[]={
+    // };
+    this->object = create3DObject(GL_TRIANGLES, 2*3, vertex_buffer_data, COLOR_BLACK, GL_FILL);
+    
+}
+void Boomerang::draw(glm::mat4 VP) {
+    Matrices.model = glm::mat4(1.0f);
+    glm::mat4 translate = glm::translate (this->position);    // glTranslatef
+    glm::mat4 scale = glm::scale (glm::vec3(1, 1, 1));    // glScalef
+    glm::mat4 rotate    = glm::rotate((float) (this->rotation * M_PI / 180.0f), glm::vec3(0, 1, 1));
+    // No need as coords centered at 0, 0, 0 of cube arouund which we waant to rotate
+    // rotate          = rotate * glm::translate(glm::vec3(0, -0.6, 0));
+    Matrices.model *= (translate * rotate*scale);
+    glm::mat4 MVP = VP * Matrices.model;
+    glUniformMatrix4fv(Matrices.MatrixID, 1, GL_FALSE, &MVP[0][0]);
+    draw3DObject(this->object);
+}
+void Boomerang::tick(){
+    this->rotation +=1.3f;
+    this->degree += 0.03f;
+    if(this->rotation > 360.0f) this->rotation = 0.0f;
+    if(this->degree > 360.0f) this->degree = 0.0f;
+    this->position.x = 3 + 15*cos(this->degree);
+    this->position.y = 0 + 4*sin(this->degree);
 }

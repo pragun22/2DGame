@@ -15,6 +15,7 @@ public:
     void move();
     void tick();
     void set_position(float x, float y);
+    bool detect_collision(bounding_box_t a);
 private:
     VAO *object;
 };
@@ -31,6 +32,25 @@ public:
     double speed;
     void move();
     void tick(Player* hooman);
+    void set_position(float x, float y);
+private:
+    VAO *object;
+};
+class Boomerang {
+public:
+    Boomerang() {}
+    Boomerang(float x, float y, float cen_x, float cen_y);
+    glm::vec3 position;
+    float rotation;
+    bool flag;
+    float x;
+    float y;
+    float degree;
+    clock_t time;
+    void draw(glm::mat4 VP);
+    double speed;
+    void move();
+    void tick();
     void set_position(float x, float y);
 private:
     VAO *object;

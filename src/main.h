@@ -18,8 +18,6 @@ struct color_t {
     int g;
     int b;
 };
-#include <GL/glut.h>
-// #include <common/text2D.hpp>
 // nonedit.cpp
 GLFWwindow *initGLFW(int width, int height);
 GLuint     LoadShaders(const char *vertex_file_path, const char *fragment_file_path);

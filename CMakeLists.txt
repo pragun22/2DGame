@@ -16,6 +16,7 @@ find_package(GLUT REQUIRED)
 include_directories( ${GLUT_INCLUDE_DIRS} )
 target_link_libraries(${PROJECT_NAME} ${GLUT_LIBRARY} )
 
+
 if (NOT APPLE)
   pkg_check_modules(GL REQUIRED gl)
   include_directories(${GL_INCLUDE_DIRS})

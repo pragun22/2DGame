@@ -24,6 +24,7 @@ std::vector<SpeedUp> speeds;
 std::vector<Firelines> firelines;
 std::vector<Firebeams> firebeams;
 std::vector<CoinsUp> pow_coins;
+vector<Boomerang> boomerang;
 Magnet mag;
 float score = 0;
 float screen_zoom = 0.5f, screen_center_x = 0, screen_center_y = 0;
@@ -33,14 +34,6 @@ int pos = 0;
 Timer t60(1.0 / 60);
 
 /* Render the scene with openGL */
-void renderBitmapString(float x, float y,const char *string){
-    glColor3f(0.5,0,1);
-    const char *c;
-    glRasterPos2f(x, y);
-    for (c=string; *c != '\0'; c++) {
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_10, *c);
-    }
-}
 /* Edit this function according to your assignment */
 void draw() {
     // clear the color and depth in the frame buffer
@@ -77,6 +70,7 @@ void draw() {
     platform.draw(VP);
     mag.draw(VP);
     for(int i = 0 ; i<firelines.size();i++) firelines[i].draw(VP);
+    for(int i = 0 ; i<boomerang.size();i++) boomerang[i].draw(VP);
     for(int i = 0 ; i<firebeams.size();i++) if(firebeams[i].flag) firebeams[i].draw(VP);
     for(int i = 0; i < speeds.size() ; i++){
         speeds[i].draw(VP);
@@ -131,7 +125,58 @@ void tick_elements() {
     a.y = player.position.y-1.0f;
     a.width = 1.0f;
     a.height = 2.4f;
-    for(int i =0; i < firebeams.size(); i++) firebeams[i].tick(&player);
+    for(int i =0; i < firelines.size(); i++){
+        bounding_box_t field;
+        field.x = firelines[i].position.x-1.5f;
+        field.y = firelines[i].position.y;
+        field.width = 5.0f;
+        field.height = 5.0f;
+        if(detect_collision(a,field)) firelines[i].detect_collision(a);
+    } 
+    
+    for(int i =0; i < boomerang.size(); i++){
+        boomerang[i].tick();
+        bounding_box_t boomer;
+        boomer.x = -1 + boomerang[i].position.x;
+        boomer.y = -1 + boomerang[i].position.y;
+        boomer.width = 2;
+        boomer.height = 1;
+        if(detect_collision(boomer, a)){
+            cout<<"laga laga kaat laga"<<endl;
+        }
+    } 
+    for(int i = 0 ; i< speeds.size();i++){
+        bounding_box_t pow;
+        pow.x = speeds[i].position.x - 0.6f*cos(M_PI/5.0f);
+        pow.y = speeds[i].position.y - 0.6f*sin(M_PI/5.0f);
+        pow.height = (0.6f + 0.6f*cos(M_PI/5.0f));
+        pow.width = (0.6f + 0.6f*cos(M_PI/5.0f));
+        if(detect_collision(a,pow)){
+            speeds.erase(speeds.begin()+i);
+            break;
+        }
+    }
+    for(int i = 0 ; i< pow_coins.size();i++){
+        bounding_box_t pow;
+        pow.x = pow_coins[i].position.x - 0.6f*cos(M_PI/5.0f);
+        pow.y = pow_coins[i].position.y - 0.6f*sin(M_PI/5.0f);
+        pow.height = (0.6f + 0.6f*cos(M_PI/5.0f));
+        pow.width = (0.6f + 0.6f*cos(M_PI/5.0f));
+        if(detect_collision(a,pow)){
+            pow_coins.erase(pow_coins.begin()+i);
+            break;
+        }
+    }
+    for(int i = 0; i < firebeams.size(); i++)
+    {
+        firebeams[i].tick(&player);
+        bounding_box_t fire;
+        fire.x = 0.2f*4 + firebeams[i].position.x;
+        fire.y = firebeams[i].position.y - 0.4f*0.9;
+        fire.width = 3.0f*4;
+        fire.height = 0.8f*0.9;
+        if(detect_collision(a,fire)) std::cout<<"kat gaya"<<std::endl;
+    }
     for(int i = 0; i<100;i++)
     {
         bounding_box_t b;
@@ -144,39 +189,6 @@ void tick_elements() {
             // cout<<a.x<<"--"<<coins[i].position.x<<endl;
             del_coins.insert(i); 
         }
-    }
-    for(int i = 0 ; i< speeds.size();i++){
-        bounding_box_t pow;
-        pow.x = speeds[i].position.x - 0.6f*cos(M_PI/5.0f);
-        pow.y = speeds[i].position.y - 0.6f*sin(M_PI/5.0f);
-        pow.height = (0.6f + 0.6f*cos(M_PI/5.0f));
-        pow.width = (0.6f + 0.6f*cos(M_PI/5.0f));
-        if(detect_collision(a,pow)){
-            SpeedUp* S = &speeds[i];
-            speeds.erase(speeds.begin()+i);
-            delete S;
-        }
-    }
-    for(int i = 0 ; i< pow_coins.size();i++){
-        bounding_box_t pow;
-        pow.x = pow_coins[i].position.x - 0.6f*cos(M_PI/5.0f);
-        pow.y = pow_coins[i].position.y - 0.6f*sin(M_PI/5.0f);
-        pow.height = (0.6f + 0.6f*cos(M_PI/5.0f));
-        pow.width = (0.6f + 0.6f*cos(M_PI/5.0f));
-        if(detect_collision(a,pow)){
-            CoinsUp* S = &pow_coins[i];
-            pow_coins.erase(pow_coins.begin()+i);
-            delete S;
-        }
-    }
-    for(int i = 0; i < firebeams.size(); i++)
-    {
-        bounding_box_t fire;
-        fire.x = 0.2f*4 + firebeams[i].position.x;
-        fire.y = firebeams[i].position.y - 0.4f*0.9;
-        fire.width = 3.0f*4;
-        fire.height = 0.8f*0.9;
-        if(detect_collision(a,fire)) std::cout<<"kat gaya"<<std::endl;
     }
 }
 /* Initialize the OpenGL rendering properties */
@@ -192,9 +204,10 @@ void initGL(GLFWwindow *window, int width, int height) {
     SpeedUp pow_speed = SpeedUp(5.0f, 3.0f, bottom);
     speeds.push_back(pow_speed);
     pow_coins.push_back(CoinsUp(10.0f, 0.0f, bottom));
-    // firelines.push_back(Firelines(3,2));
-    firebeams.push_back(Firebeams(2,5));
-    firebeams.push_back(Firebeams(2,-3));
+    firelines.push_back(Firelines(3,2));
+    // firebeams.push_back(Firebeams(2, 5));
+    // firebeams.push_back(Firebeams(2, -3));
+    boomerang.push_back(Boomerang(2.0f,2.0f, 3.0f, 0.0f));
     for(int i = 0;i<50;i++)
     {
         float x1 = 94.2 +(float)i/2.0f;
@@ -209,6 +222,8 @@ void initGL(GLFWwindow *window, int width, int height) {
         }
     }
     // Create and compile our GLSL program from the shaders
+    //fonts work
+    //fonts work ends here
     programID = LoadShaders("Sample_GL.vert", "Sample_GL.frag");
     // Get a handle for our "MVP" uniform
     Matrices.MatrixID = glGetUniformLocation(programID, "MVP");
@@ -237,14 +252,13 @@ int main(int argc, char **argv) {
     window = initGLFW(width, height);
 // initText2D( "Holstein.DDS" );
     initGL (window, width, height);
-    glutInit(&argc, argv);
     /* Draw in loop */
     clock_t start = clock();
     while (!glfwWindowShouldClose(window)) {
         // Process timers
 
         if (t60.processTick()) {
-            std::cout<<"tick"<<std::endl;
+            // std::cout<<"tick"<<std::endl;
             // 60 fps
             // OpenGL Draw commands
             clock_t end = clock();
@@ -266,8 +280,6 @@ int main(int argc, char **argv) {
             glfwSwapBuffers(window);
 
             score += float(1*float(1/60));
-            char buffer[256];
-            sprintf(buffer,"SCORE :  %.2f",score);
             tick_input(window);
             tick_elements();
             reset_screen();
