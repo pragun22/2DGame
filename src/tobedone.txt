@@ -6,3 +6,5 @@
 6. fire beams random 
 7. viserion 
 8. extinguish fire
+9. score
+10. balloons 

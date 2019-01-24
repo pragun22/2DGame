@@ -32,7 +32,7 @@ float score = 0;
 float screen_zoom = 0.5f, screen_center_x = 0, screen_center_y = 0;
 float camera_rotation_angle = 0;
 int pos = 0;
-
+double acc = 0.0;
 Timer t60(1.0 / 60);
 
 /* Render the scene with openGL */
@@ -104,16 +104,17 @@ void tick_input(GLFWwindow *window) {
     }
     if(right) {
         float factor = 1.0f;
-        float right  = screen_center_x + 4.0f / screen_zoom;
-        if(player.position.x >= screen_center_x + 1 ) screen_center_x += 0.24f,factor = 2.0f;
-        else screen_center_x += 0.07f;
+        if(player.position.x >= screen_center_x + 1.0f ) screen_center_x += 0.24f,factor = 2.0f;
+        else screen_center_x += 0.07f ;
         player.move(1,factor);
         platform.move();
     }
     if(left){
-        player.move(0,1.0f); 
-        screen_center_x -= 0.07f;
-
+        float factor = 1.0f;
+        if(player.position.x <= screen_center_x - 1.0f ) screen_center_x -= 0.24f,factor = 2.0f;
+        else screen_center_x -= 0.07f ;
+        player.move(0,factor);
+        platform.move();
     } 
 }
 void tick_elements() {
@@ -350,7 +351,7 @@ void reset_screen() {
     float bottom = screen_center_y - 4 / screen_zoom;
     float left   = screen_center_x - 4 / screen_zoom;
     float right  = screen_center_x + 4 / screen_zoom;
-    if(player.position.x < left + 1.0f) player.position.x = left + 1.0f;
+    if(player.position.x < screen_center_x - 1.0f) player.position.x = screen_center_x - 1.0f;
     if(player.position.x > screen_center_x + 1.0f ) player.position.x = screen_center_x + 1.0f;
     // if(player.yspeed==0){ 
     //     player.position.y = bottom+2;

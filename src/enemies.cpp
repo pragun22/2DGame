@@ -2,8 +2,8 @@
 #include "main.h"
 Firelines::Firelines(float x, float y) {
     this->position = glm::vec3(x, y, 0);
-    this->rotation = 63.0f;
-    // this->rotation = 50.0f + float(rand()%20);
+    // this->rotation = 63.0f;
+    this->rotation = 50.0f + float(rand()%20);
     speed = 0.01;
     int n = 400;
     int inc = 1;
