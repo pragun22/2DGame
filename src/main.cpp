@@ -7,6 +7,7 @@
 #include "special.h"
 #include "enemies.h"
 #include "platform.h"
+#include "score.h"
 using namespace std;
 
 GLMatrices Matrices;
@@ -33,6 +34,7 @@ float screen_zoom = 0.5f, screen_center_x = 0, screen_center_y = 0;
 float camera_rotation_angle = 0;
 int pos = 0;
 double acc = 0.0;
+clock_t bond;
 Timer t60(1.0 / 60);
 
 /* Render the scene with openGL */
@@ -70,6 +72,7 @@ void draw() {
     // ball1.draw(VP);
     player.draw(VP);
     platform.draw(VP);
+    one.draw(VP);
     for(int i = 0 ; i<firelines.size();i++) firelines[i].draw(VP);
     for(int i = 0 ; i<mag.size();i++) mag[i].draw(VP);
     for(int i = 0 ; i<boomerang.size();i++) boomerang[i].draw(VP);
@@ -89,12 +92,17 @@ void tick_input(GLFWwindow *window) {
     int zoom_out = glfwGetKey(window, GLFW_KEY_DOWN);
     int ball = glfwGetKey(window, GLFW_KEY_B);
     if(ball){
-        balloons.push_back(Balloon(player.position.x+1, player.position.y+1,player.xspeed,player.yspeed));
+        clock_t start = clock();
+        double timer = ((double) (start - bond)) / CLOCKS_PER_SEC;
+        if(timer > 0.2){
+            balloons.push_back(Balloon(player.position.x+1, player.position.y+1,player.xspeed,player.yspeed));
+            bond = clock();
+        }
     }
     if (up) {
         player.jump();  
     }
-    if(zoom_in) {
+    if(zoom_in) {   
         screen_zoom+=0.1f;
         if(screen_zoom>2.0f) screen_zoom = 2.0f;
     }
@@ -111,7 +119,7 @@ void tick_input(GLFWwindow *window) {
     }
     if(left){
         float factor = 1.0f;
-        if(player.position.x <= screen_center_x - 1.0f ) screen_center_x -= 0.24f,factor = 2.0f;
+        if(player.position.x <= screen_center_x - 2.0f ) screen_center_x -= 0.24f,factor = 2.0f;
         else screen_center_x -= 0.07f ;
         player.move(0,factor);
         platform.move();
@@ -141,21 +149,31 @@ void tick_elements() {
     for(int i = 0 ; i < mag.size() ; i++){
         mag[i].tick(&player);
     }
-    for(int i = 0; i < balloons.size(); i++)
-    {
+    for(int i = 0; i < balloons.size(); i++){
         balloons[i].tick();   
-        if(firebeams.size()>0)
-        {
-            bounding_box_t fire;
-            fire.x = 0.2f*4 + firebeams[0].position.x;
-            fire.y = firebeams[0].position.y - 0.4f*0.9;
-            fire.width = 3.0f*4;
-            fire.height = 0.8f*0.9;
-            if(balloons[i].detect_collision(fire)){
-            cout<<"awwlele jal gaya "<<rand()<<endl;
+        bounding_box_t fire;
+        fire.x = 0.2f*4 + firebeams[0].position.x;
+        fire.y = firebeams[0].position.y - 0.4f*0.9;
+        fire.width = 3.0f*4;
+        fire.height = 0.8f*0.9;
+        if(balloons[i].detect_collision(fire) && firebeams[0].flag){ 
+            firebeams[0].flag = false;
+            firebeams[0].reset();
             balloons.erase(balloons.begin()+i);
-            }
+            break;
         }
+        // for(int i = 0 ; i < firelines.size() ; i++){
+        //     bounding_box_t b;
+        //     b.x = balloons[i].position.x - 0.4f;
+        //     b.y = balloons[i].position.y - 0.4f;
+        //     b.height = 0.8f;
+        //     b.width = 0.8f; 
+        //     if(firelines[i].detect_collision(b)){
+        //         firelines.erase(firelines.begin()+i);
+        //          balloons.erase(balloons.begin()+i);                
+        //         break;
+        //     }
+        // }
     }
     for(int i =0; i < boomerang.size(); i++){
         boomerang[i].tick();
@@ -176,6 +194,7 @@ void tick_elements() {
         pow.width = (0.6f + 0.6f*cos(M_PI/5.0f));
         if(detect_collision(a,pow)){
             speeds.erase(speeds.begin()+i);
+            cout<<"speed up"<<endl;
             break;
         }
     }
@@ -187,6 +206,7 @@ void tick_elements() {
         pow.width = (0.6f + 0.6f*cos(M_PI/5.0f));
         if(detect_collision(a,pow)){
             pow_coins.erase(pow_coins.begin()+i);
+            score += 0.1f;
             break;
         }
     }
@@ -221,8 +241,9 @@ void initGL(GLFWwindow *window, int width, int height) {
     /* Objects should be created before any other gl function and shaders */
     // Create the models
     float bottom = screen_center_y - 4.0f / screen_zoom;
-    std::cout<<bottom<<std::endl;
-    player = Player(-3.0f, -2.0f, COLOR_BLACK,bottom);
+    One one = One(-1,2);
+    bond = clock();
+    player = Player(-3.0f, bottom+2.0f, COLOR_BLACK,bottom);
     platform = Platform(-30.0f, bottom , 1);
     speeds.push_back(SpeedUp(5.0f, 3.0f, bottom));
     pow_coins.push_back(CoinsUp(10.0f, 0.0f, bottom));
@@ -351,7 +372,7 @@ void reset_screen() {
     float bottom = screen_center_y - 4 / screen_zoom;
     float left   = screen_center_x - 4 / screen_zoom;
     float right  = screen_center_x + 4 / screen_zoom;
-    if(player.position.x < screen_center_x - 1.0f) player.position.x = screen_center_x - 1.0f;
+    if(player.position.x < screen_center_x - 2.0f) player.position.x = screen_center_x - 2.0f;
     if(player.position.x > screen_center_x + 1.0f ) player.position.x = screen_center_x + 1.0f;
     // if(player.yspeed==0){ 
     //     player.position.y = bottom+2;

@@ -97,12 +97,28 @@ void Magnet::tick(Player* hooman){
         hooman->position.x = tempx;
         hooman->position.y = tempy;
     }
-    // real function
     float t1 = abs(hooman->position.x - this->position.x+1);
     float t2 = abs(hooman->position.y - this->position.y);
-    float dis = t1*t1 + t2*t2; 
-    hooman->xspeed -= 0.22/dis;
-    hooman->yspeed -= 0.18/dis; 
+    float dis = sqrt(t1*t1 + t2*t2); 
+    float force = 0.160f/dis; 
+    float temp1 = hooman->position.x*hooman->position.x + hooman->position.y*hooman->position.y;
+    float temp2 = this->position.x*this->position.x + this->position.y*this->position.y;
+    bool flag = false;
+    if(hooman->position.y > this->position.y) flag  = true;
+    if(dis<16.0f)
+    {
+        if(flag)
+        {
+            hooman->position.x -= force*(t1)/dis;
+            hooman->yspeed -= force*(t2)/dis; 
+        }
+        else
+        {
+            hooman->position.x += force*(t1)/dis;
+            hooman->yspeed += force*(t2)/dis; 
+        }
+    }
+    // real function
 }
 bool Magnet::detect_collision(bounding_box_t a, bounding_box_t b) {
     bool x = a.x + a.width >= b.x && b.x + b.width >= a.x?true:false;

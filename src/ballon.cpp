@@ -58,10 +58,10 @@ void Balloon::tick(){
 bool Balloon::detect_collision(bounding_box_t a){
     float r = 0.4f;
     bounding_box_t b;
-    b.x = a.x - r;
-    b.y = a.y - r;
-    b.height = r;
-    b.width = r; 
+    b.x = this->position.x - r;
+    b.y = this->position.y - r;
+    b.height = 2*r;
+    b.width = 2*r; 
     bool x = a.x + a.width >= b.x && b.x + b.width >= a.x?true:false;
     bool y = a.y + a.height >= b.y && b.y + b.height >= a.y?true:false;
     return (x && y);

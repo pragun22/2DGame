@@ -97,8 +97,11 @@ void Player::tick(){
         this->yspeed = 0;
         this->position.y = this->miny;
     }
+    else{
+        this->yspeed += -1*0.009f;
+    }
     if(this->yspeed!=0){
-        this->yspeed += -1*0.012f;
+        this->yspeed += -1*0.009f;
         // this->yspeed += -1*0.015;
     }
     if(this->xspeed>0.0f){
