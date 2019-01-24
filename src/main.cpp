@@ -22,6 +22,7 @@ vector<Ball> coins;
 set<int> del_coins;
 Player player;
 Platform platform;
+One one;
 std::vector<SpeedUp> speeds;
 std::vector<Firelines> firelines;
 std::vector<Firebeams> firebeams;
@@ -241,7 +242,7 @@ void initGL(GLFWwindow *window, int width, int height) {
     /* Objects should be created before any other gl function and shaders */
     // Create the models
     float bottom = screen_center_y - 4.0f / screen_zoom;
-    One one = One(-1,2);
+    one = One(-1,2);
     bond = clock();
     player = Player(-3.0f, bottom+2.0f, COLOR_BLACK,bottom);
     platform = Platform(-30.0f, bottom , 1);

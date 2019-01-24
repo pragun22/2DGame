@@ -10,3 +10,4 @@ const color_t COLOR_COIN2 = { 222, 41, 95 };
 const color_t COLOR_ORANGE = { 242, 154, 39 };
 const color_t COLOR_FIRE = { 242, 40, 34 };
 const color_t COLOR_BLUE = { 43, 50, 206};
+const color_t COLOR_REAL_BLACK = { 1, 1, 1};
