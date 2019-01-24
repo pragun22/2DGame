@@ -88,14 +88,6 @@ Two::Two(float x, float y) {
         0.25f, 0, 0,
         0.25f, 0.5f, 0, // lower left
 
-        0, 1, 0,
-        0.25f, 1.0f, 0,
-        0, 0.5f, 0,
-
-        0, 0.5f, 0,
-        0.25f, 0.5f, 0,
-        0.25f, 1.0f, 0, // upper left
-
         0.75f, 1.0f, 0,
         1.0f, 1.0f, 0,
         0.75f, 0.5f, 0,
@@ -103,14 +95,6 @@ Two::Two(float x, float y) {
         1.0f, 1.0f, 0,
         1.0f, 0.5f, 0,
         0.75f, 0.5f, 0, // upper right
-        
-        0.75f, 0, 0,
-        1, 0.0f, 0,
-        1.0f, 0.5f, 0,
-
-        0.75f, 0, 0,
-        0.75f, 0.5f, 0,
-        1.0f, 0.5f, 0, // lower right
 
         0.25f, 0, 0,
         0.75f, 0 , 0,
@@ -155,22 +139,6 @@ Three::Three(float x, float y) {
     this->position = glm::vec3(x, y, 0);
     this->rotation = 0;
     const GLfloat vertex_buffer_data[]={
-        0, 0, 0,
-        0, 0.5f, 0,
-        0.25f, 0.5f, 0,
-
-        0, 0, 0,
-        0.25f, 0, 0,
-        0.25f, 0.5f, 0, // lower left
-
-        0, 1, 0,
-        0.25f, 1.0f, 0,
-        0, 0.5f, 0,
-
-        0, 0.5f, 0,
-        0.25f, 0.5f, 0,
-        0.25f, 1.0f, 0, // upper left
-
         0.75f, 1.0f, 0,
         1.0f, 1.0f, 0,
         0.75f, 0.5f, 0,
@@ -230,14 +198,6 @@ Four::Four(float x, float y) {
     this->position = glm::vec3(x, y, 0);
     this->rotation = 0;
     const GLfloat vertex_buffer_data[]={
-        0, 0, 0,
-        0, 0.5f, 0,
-        0.25f, 0.5f, 0,
-
-        0, 0, 0,
-        0.25f, 0, 0,
-        0.25f, 0.5f, 0, // lower left
-
         0, 1, 0,
         0.25f, 1.0f, 0,
         0, 0.5f, 0,
@@ -262,14 +222,6 @@ Four::Four(float x, float y) {
         0.75f, 0.5f, 0,
         1.0f, 0.5f, 0, // lower right
 
-        0.25f, 0, 0,
-        0.75f, 0 , 0,
-        0.75f, 0.12f, 0,
-
-        0.25f, 0, 0,
-        0.75f, 0.12f , 0,
-        0.25f, 0.12f, 0,  //lower middle
-
         0.25f, 0.5f, 0,
         0.75f, 0.5f , 0,
         0.75f, 0.62f, 0,
@@ -277,14 +229,6 @@ Four::Four(float x, float y) {
         0.25f, 0.5f, 0,
         0.75f, 0.62f , 0,
         0.25f, 0.62f, 0,  //middle middle
-
-        0.25f, 1, 0,
-        0.75f, 1 , 0,
-        0.75f, 0.88f, 0,
-
-        0.25f, 1, 0,
-        0.75f, 0.88f , 0,
-        0.25f, 0.88f, 0,  //lower middle
         
     };
     this->object = create3DObject(GL_TRIANGLES, 14*3, vertex_buffer_data, COLOR_REAL_BLACK, GL_FILL);
@@ -305,13 +249,6 @@ Five::Five(float x, float y) {
     this->position = glm::vec3(x, y, 0);
     this->rotation = 0;
     const GLfloat vertex_buffer_data[]={
-        0, 0, 0,
-        0, 0.5f, 0,
-        0.25f, 0.5f, 0,
-
-        0, 0, 0,
-        0.25f, 0, 0,
-        0.25f, 0.5f, 0, // lower left
 
         0, 1, 0,
         0.25f, 1.0f, 0,
@@ -320,14 +257,6 @@ Five::Five(float x, float y) {
         0, 0.5f, 0,
         0.25f, 0.5f, 0,
         0.25f, 1.0f, 0, // upper left
-
-        0.75f, 1.0f, 0,
-        1.0f, 1.0f, 0,
-        0.75f, 0.5f, 0,
-
-        1.0f, 1.0f, 0,
-        1.0f, 0.5f, 0,
-        0.75f, 0.5f, 0, // upper right
         
         0.75f, 0, 0,
         1, 0.0f, 0,
@@ -395,14 +324,6 @@ Six::Six(float x, float y) {
         0, 0.5f, 0,
         0.25f, 0.5f, 0,
         0.25f, 1.0f, 0, // upper left
-
-        0.75f, 1.0f, 0,
-        1.0f, 1.0f, 0,
-        0.75f, 0.5f, 0,
-
-        1.0f, 1.0f, 0,
-        1.0f, 0.5f, 0,
-        0.75f, 0.5f, 0, // upper right
         
         0.75f, 0, 0,
         1, 0.0f, 0,
@@ -428,13 +349,6 @@ Six::Six(float x, float y) {
         0.75f, 0.62f , 0,
         0.25f, 0.62f, 0,  //middle middle
 
-        0.25f, 1, 0,
-        0.75f, 1 , 0,
-        0.75f, 0.88f, 0,
-
-        0.25f, 1, 0,
-        0.75f, 0.88f , 0,
-        0.25f, 0.88f, 0,  //lower middle
         
     };
     this->object = create3DObject(GL_TRIANGLES, 14*3, vertex_buffer_data, COLOR_REAL_BLACK, GL_FILL);
@@ -455,21 +369,7 @@ Seven::Seven(float x, float y) {
     this->position = glm::vec3(x, y, 0);
     this->rotation = 0;
     const GLfloat vertex_buffer_data[]={
-        0, 0, 0,
-        0, 0.5f, 0,
-        0.25f, 0.5f, 0,
 
-        0, 0, 0,
-        0.25f, 0, 0,
-        0.25f, 0.5f, 0, // lower left
-
-        0, 1, 0,
-        0.25f, 1.0f, 0,
-        0, 0.5f, 0,
-
-        0, 0.5f, 0,
-        0.25f, 0.5f, 0,
-        0.25f, 1.0f, 0, // upper left
 
         0.75f, 1.0f, 0,
         1.0f, 1.0f, 0,
@@ -486,22 +386,6 @@ Seven::Seven(float x, float y) {
         0.75f, 0, 0,
         0.75f, 0.5f, 0,
         1.0f, 0.5f, 0, // lower right
-
-        0.25f, 0, 0,
-        0.75f, 0 , 0,
-        0.75f, 0.12f, 0,
-
-        0.25f, 0, 0,
-        0.75f, 0.12f , 0,
-        0.25f, 0.12f, 0,  //lower middle
-
-        0.25f, 0.5f, 0,
-        0.75f, 0.5f , 0,
-        0.75f, 0.62f, 0,
-
-        0.25f, 0.5f, 0,
-        0.75f, 0.62f , 0,
-        0.25f, 0.62f, 0,  //middle middle
 
         0.25f, 1, 0,
         0.75f, 1 , 0,
@@ -605,13 +489,6 @@ Nine::Nine(float x, float y) {
     this->position = glm::vec3(x, y, 0);
     this->rotation = 0;
     const GLfloat vertex_buffer_data[]={
-        0, 0, 0,
-        0, 0.5f, 0,
-        0.25f, 0.5f, 0,
-
-        0, 0, 0,
-        0.25f, 0, 0,
-        0.25f, 0.5f, 0, // lower left
 
         0, 1, 0,
         0.25f, 1.0f, 0,
