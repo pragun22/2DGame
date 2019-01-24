@@ -23,6 +23,14 @@ set<int> del_coins;
 Player player;
 Platform platform;
 One one;
+Two two;
+Three three;
+Four four;
+Five five;
+Six six;
+Seven seven;
+Eight eight;
+Nine nine;
 std::vector<SpeedUp> speeds;
 std::vector<Firelines> firelines;
 std::vector<Firebeams> firebeams;
@@ -40,6 +48,23 @@ Timer t60(1.0 / 60);
 
 /* Render the scene with openGL */
 /* Edit this function according to your assignment */
+void display_score(int score,float x){
+    float pos = x;
+    while(score>0){
+        int temp = score % 10;
+        if(temp==1) one.draw(pos, 7);
+        if(temp==2) two.draw(pos, 7);
+        if(temp==3) three.draw(pos, 7);
+        if(temp==4) four.draw(pos, 7);
+        if(temp==5) five.draw(pos, 7);
+        if(temp==6) six.draw(pos, 7);
+        if(temp==7) seven.draw(pos, 7);
+        if(temp==8) eight.draw(pos, 7);
+        if(temp==9) nine.draw(pos, 7);
+        pos += 1.1f;
+        score = score / 10;
+    }
+}
 void draw() {
     // clear the color and depth in the frame buffer
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
