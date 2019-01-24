@@ -22,15 +22,15 @@ vector<Ball> coins;
 set<int> del_coins;
 Player player;
 Platform platform;
-One one;
-Two two;
-Three three;
-Four four;
-Five five;
-Six six;
-Seven seven;
-Eight eight;
-Nine nine;
+vector<One> one;
+vector<Two> two;
+vector<Three> three;
+vector<Four> four;
+vector<Five> five;
+vector<Six> six;
+vector<Seven> seven;
+vector<Eight> eight;
+vector<Nine> nine;
 std::vector<SpeedUp> speeds;
 std::vector<Firelines> firelines;
 std::vector<Firebeams> firebeams;
@@ -48,19 +48,19 @@ Timer t60(1.0 / 60);
 
 /* Render the scene with openGL */
 /* Edit this function according to your assignment */
-void display_score(int score,float x){
+void score_tick(int score,float x){
     float pos = x;
     while(score>0){
         int temp = score % 10;
-        if(temp==1) one.draw(pos, 7);
-        if(temp==2) two.draw(pos, 7);
-        if(temp==3) three.draw(pos, 7);
-        if(temp==4) four.draw(pos, 7);
-        if(temp==5) five.draw(pos, 7);
-        if(temp==6) six.draw(pos, 7);
-        if(temp==7) seven.draw(pos, 7);
-        if(temp==8) eight.draw(pos, 7);
-        if(temp==9) nine.draw(pos, 7);
+        if(temp==1) one.push_back(One(pos, 7));
+        if(temp==2) two.push_back(Two(pos, 7));
+        if(temp==3) three.push_back(Three(pos, 7));
+        if(temp==4) four.push_back(Four(pos, 7));
+        if(temp==5) five.push_back(Five(pos, 7));
+        if(temp==6) six.push_back(Six(pos, 7));
+        if(temp==7) seven.push_back(Seven(pos, 7));
+        if(temp==8) eight.push_back(Eight(pos, 7));
+        if(temp==9) nine.push_back(Nine(pos, 7));
         pos += 1.1f;
         score = score / 10;
     }
@@ -98,7 +98,15 @@ void draw() {
     // ball1.draw(VP);
     player.draw(VP);
     platform.draw(VP);
-    one.draw(VP);
+    for(int i = 0; i < one.size();i++) one[i].draw(VP);
+    for(int i = 0; i < two.size();i++) two[i].draw(VP);
+    for(int i = 0; i < three.size();i++) three[i].draw(VP);
+    for(int i = 0; i < four.size();i++) four[i].draw(VP);
+    for(int i = 0; i < five.size();i++) five[i].draw(VP);
+    for(int i = 0; i < six.size();i++) six[i].draw(VP);
+    for(int i = 0; i < seven.size();i++) seven[i].draw(VP);
+    for(int i = 0; i < eight.size();i++) eight[i].draw(VP);
+    for(int i = 0; i < nine.size();i++) nine[i].draw(VP);
     for(int i = 0 ; i<firelines.size();i++) firelines[i].draw(VP);
     for(int i = 0 ; i<mag.size();i++) mag[i].draw(VP);
     for(int i = 0 ; i<boomerang.size();i++) boomerang[i].draw(VP);
@@ -153,6 +161,7 @@ void tick_input(GLFWwindow *window) {
 }
 void tick_elements() {
     // screen_center_x += 0.07f;
+    score_tick(player.position.x, 2574);
     player.tick();
     for(int i = 0 ; i < speeds.size(); i++) speeds[i].tick();
     for(int i = 0 ; i < pow_coins.size(); i++) pow_coins[i].tick();
