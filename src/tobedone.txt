@@ -1,0 +1,8 @@
+1. coins of different color
+2. Magnets random 
+3. speed ups functionality
+4. semicircular ring
+5. fire lines at random letter
+6. fire beams random 
+7. viserion 
+8. extinguish fire

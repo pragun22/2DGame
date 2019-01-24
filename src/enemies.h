@@ -27,10 +27,12 @@ public:
     glm::vec3 position;
     float rotation;
     bool flag;
+    float facto;
     clock_t time;
     void draw(glm::mat4 VP);
     double speed;
     void move();
+    void reset();
     void tick(Player* hooman);
     void set_position(float x, float y);
 private:

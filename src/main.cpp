@@ -17,7 +17,7 @@ GLFWwindow *window;
 * Customizable functions *
 **************************/
 
-Ball coins[100];
+vector<Ball> coins;
 set<int> del_coins;
 Player player;
 Platform platform;
@@ -27,7 +27,7 @@ std::vector<Firebeams> firebeams;
 std::vector<CoinsUp> pow_coins;
 std::vector<Balloon> balloons;
 vector<Boomerang> boomerang;
-Magnet mag;
+vector<Magnet> mag;
 float score = 0;
 float screen_zoom = 0.5f, screen_center_x = 0, screen_center_y = 0;
 float camera_rotation_angle = 0;
@@ -70,22 +70,15 @@ void draw() {
     // ball1.draw(VP);
     player.draw(VP);
     platform.draw(VP);
-    mag.draw(VP);
     for(int i = 0 ; i<firelines.size();i++) firelines[i].draw(VP);
+    for(int i = 0 ; i<mag.size();i++) mag[i].draw(VP);
     for(int i = 0 ; i<boomerang.size();i++) boomerang[i].draw(VP);
     for(int i = 0 ; i<firebeams.size();i++) if(firebeams[i].flag) firebeams[i].draw(VP);
-    for(int i = 0 ; i<balloons.size();i++){
-        balloons[i].draw(VP);
-    } 
-    for(int i = 0; i < speeds.size() ; i++){
-        speeds[i].draw(VP);
-    }
-    for(int i = 0; i < pow_coins.size() ; i++){
-        pow_coins[i].draw(VP);
-    }
-    for(int i = 0; i < 100; i++) {
-        if(del_coins.find(i)==del_coins.end()) coins[i].draw(VP);
-    }
+    for(int i = 0 ; i<balloons.size();i++) balloons[i].draw(VP);
+    for(int i = 0; i < speeds.size() ; i++) speeds[i].draw(VP);
+    for(int i = 0; i < pow_coins.size() ; i++) pow_coins[i].draw(VP);
+    for(int i = 0; i < coins.size(); i++) coins[i].draw(VP);
+
 }
 
 void tick_input(GLFWwindow *window) {
@@ -126,7 +119,6 @@ void tick_input(GLFWwindow *window) {
 void tick_elements() {
     // screen_center_x += 0.07f;
     player.tick();
-    mag.tick(&player);
     for(int i = 0 ; i < speeds.size(); i++) speeds[i].tick();
     for(int i = 0 ; i < pow_coins.size(); i++) pow_coins[i].tick();
     bounding_box_t a;
@@ -137,11 +129,17 @@ void tick_elements() {
     for(int i =0; i < firelines.size(); i++){
         bounding_box_t field;
         field.x = firelines[i].position.x-1.5f;
-        field.y = firelines[i].position.y;
+        field.y = firelines[i].position.y+0.3f;
         field.width = 5.0f;
         field.height = 5.0f;
-        if(detect_collision(a,field)) firelines[i].detect_collision(a);
+        if(detect_collision(a,field)){
+            cout<<field.y<<" aaj mai krke aaya "<<rand()<<endl;
+            firelines[i].detect_collision(a);
+        }
     } 
+    for(int i = 0 ; i < mag.size() ; i++){
+        mag[i].tick(&player);
+    }
     for(int i = 0; i < balloons.size(); i++)
     {
         balloons[i].tick();   
@@ -161,12 +159,12 @@ void tick_elements() {
     for(int i =0; i < boomerang.size(); i++){
         boomerang[i].tick();
         bounding_box_t boomer;
-        boomer.x = -1 + boomerang[i].position.x;
-        boomer.y = -1 + boomerang[i].position.y;
-        boomer.width = 2;
-        boomer.height = 1;
+        boomer.x = -0.5f + boomerang[i].position.x;
+        boomer.y = -0.5f + boomerang[i].position.y;
+        boomer.width = 1.0f;
+        boomer.height = 0.5f;
         if(detect_collision(boomer, a)){
-            cout<<"laga laga kaat laga"<<endl;
+            cout<<"laga laga kaata laga"<<endl;
         }
     } 
     for(int i = 0 ; i< speeds.size();i++){
@@ -191,27 +189,28 @@ void tick_elements() {
             break;
         }
     }
-    for(int i = 0; i < firebeams.size(); i++)
-    {
-        firebeams[i].tick(&player);
+    for(int i = 0; i < firebeams.size(); i++){
+        if(firebeams[i].flag) firebeams[i].tick(&player);
+        else firebeams[i].reset();
         bounding_box_t fire;
-        fire.x = 0.2f*4 + firebeams[i].position.x;
-        fire.y = firebeams[i].position.y - 0.4f*0.9;
-        fire.width = 3.0f*4;
-        fire.height = 0.8f*0.9;
-        if(detect_collision(a,fire)) std::cout<<"kat gaya "<<rand()<<std::endl;
+        fire.x = 0.2f*3.5 + firebeams[i].position.x;
+        fire.y = firebeams[i].position.y - 0.4f*0.7;
+        fire.width = 3.0f*3.5;
+        fire.height = 0.8f*0.7;
+        if(detect_collision(a,fire)){
+            
+            if(firebeams[i].flag) std::cout<<"kat gaya "<<rand()<<std::endl;
+        }
+            
     }
-    for(int i = 0; i<100;i++)
-    {
+    for(int i = 0; i<coins.size();i++){
         bounding_box_t b;
         b.x = coins[i].position.x-0.2f;
         b.y = coins[i].position.y-0.2f;
         b.width = 0.4;
         b.height = 0.4;
-        if(detect_collision(a,b))
-        {
-            // cout<<a.x<<"--"<<coins[i].position.x<<endl;
-            del_coins.insert(i); 
+        if(detect_collision(a,b)){
+            coins.erase(coins.begin()+i);
         }
     }
 }
@@ -224,24 +223,49 @@ void initGL(GLFWwindow *window, int width, int height) {
     std::cout<<bottom<<std::endl;
     player = Player(-3.0f, -2.0f, COLOR_BLACK,bottom);
     platform = Platform(-30.0f, bottom , 1);
-    mag = Magnet(14.0f,4.0f);
-    SpeedUp pow_speed = SpeedUp(5.0f, 3.0f, bottom);
-    speeds.push_back(pow_speed);
+    speeds.push_back(SpeedUp(5.0f, 3.0f, bottom));
     pow_coins.push_back(CoinsUp(10.0f, 0.0f, bottom));
-    firelines.push_back(Firelines(3,2));
-    // firebeams.push_back(Firebeams(2, 6));
-    boomerang.push_back(Boomerang(2.0f,2.0f, 3.0f, 0.0f));
-    for(int i = 0;i<50;i++)
-    {
-        float x1 = 94.2 +(float)i/2.0f;
-        if(i<25)
-        {
-            coins[i] = Ball(x1, 2.0f, COLOR_COIN,0.2f);
-            coins[99-i] = Ball(x1 , 2.5f, COLOR_COIN,0.2f);
+    for(int i = 0 ; i < 15 ; i++){
+        float x = 15 + ((float)i/1.5f)*21.2f;
+        firelines.push_back(Firelines(x,2));
+    }
+    firebeams.push_back(Firebeams(6, 6));
+    for(int i = 0; i < 10 ; i++){
+        float x = 20.0f + i*26.3f;
+        boomerang.push_back(Boomerang(2.0f,2.0f, x, 0.0f));   
+    }
+    for(int i = 0 ; i < 10 ; i++){
+        float x = 50.0f + i*43.0f;
+         mag.push_back(Magnet(x,i%4 + 2));
+    }
+    for(int i = 0;i<50;i++){
+        float x1 = 94.2 +(float)i/1.5f;
+        if(i<=24 && i > 22){
+            coins.push_back(Ball(x1, 2.0f, COLOR_COIN2,0.3f));
+            coins.push_back(Ball(x1, 2.5f, COLOR_COIN2,0.3f));
+        }
+        else if(i<25){
+            coins.push_back(Ball(x1, 2.0f, COLOR_COIN,0.2f));
+            coins.push_back(Ball(x1, 2.5f, COLOR_COIN,0.2f));
         }
         else{
-            coins[i] = Ball(x1,2.5f,COLOR_COIN,0.2f);
-            coins[99-i] = Ball(x1 , 3.0f, COLOR_COIN,0.2f);
+            coins.push_back(Ball(x1,2.5f,COLOR_COIN,0.2f));
+            coins.push_back(Ball(x1,3.0f,COLOR_COIN,0.2f));
+        }
+    }
+    for(int i = 0;i<50;i++){
+        float x1 = 184.2 +(float)i/1.5f;
+        if(i<=24 && i > 22){
+            coins.push_back(Ball(x1, 0.0f, COLOR_COIN2,0.3f));
+            coins.push_back(Ball(x1, 0.5f, COLOR_COIN2,0.3f));
+        }
+        else if(i<25){
+            coins.push_back(Ball(x1, 0.0f, COLOR_COIN,0.2f));
+            coins.push_back(Ball(x1, 0.5f, COLOR_COIN,0.2f));
+        }
+        else{
+            coins.push_back(Ball(x1,0.5f,COLOR_COIN,0.2f));
+            coins.push_back(Ball(x1,1.0f,COLOR_COIN,0.2f));
         }
     }
     // Create and compile our GLSL program from the shaders
@@ -285,10 +309,10 @@ int main(int argc, char **argv) {
             // OpenGL Draw commands
             clock_t end = clock();
             int timer = ((int) (end - start)) / CLOCKS_PER_SEC;
-            int random1 = rand()%932;
-            int random2 = rand()%932;
-            if(true){   
-            // if(abs(random1 - random2)==0){
+            int random1 = rand()%1232;
+            int random2 = rand()%1232;
+            // if(true){   
+            if(abs(random1 - random2)==0){
                 for(int i = 0 ; i < firebeams.size() ; i++){
                     
                     if(!firebeams[i].flag){
@@ -331,6 +355,11 @@ void reset_screen() {
     // if(player.yspeed==0){ 
     //     player.position.y = bottom+2;
     // }
+    if(player.position.y > top-1.4f)
+    { 
+        player.position.y = top - 1.4f;
+        player.yspeed = 0.0f;
+    }
     player.miny = bottom+2.0f;
     platform.position.y = bottom;
     for(int i = 0  ; i < speeds.size() ; i++){

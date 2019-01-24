@@ -80,7 +80,7 @@ void Player::set_position(float x, float y) {
     this->position = glm::vec3(x, y, 0);
 }
 void Player::jump(){
-    this->yspeed = 0.215f;
+    this->yspeed = 0.125f;
 }
 void Player::move(int l,float fact)
 {
@@ -98,7 +98,7 @@ void Player::tick(){
         this->position.y = this->miny;
     }
     if(this->yspeed!=0){
-        this->yspeed += -1*0.005f;
+        this->yspeed += -1*0.012f;
         // this->yspeed += -1*0.015;
     }
     if(this->xspeed>0.0f){
