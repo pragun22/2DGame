@@ -121,7 +121,7 @@ Two::Two(float x, float y) {
         0.25f, 0.88f, 0,  //lower middle
         
     };
-    this->object = create3DObject(GL_TRIANGLES, 14*3, vertex_buffer_data, COLOR_REAL_BLACK, GL_FILL);
+    this->object = create3DObject(GL_TRIANGLES, 10*3, vertex_buffer_data, COLOR_REAL_BLACK, GL_FILL);
 }
 
 void Two::draw(glm::mat4 VP) {
@@ -180,7 +180,7 @@ Three::Three(float x, float y) {
         0.25f, 0.88f, 0,  //lower middle
         
     };
-    this->object = create3DObject(GL_TRIANGLES, 14*3, vertex_buffer_data, COLOR_REAL_BLACK, GL_FILL);
+    this->object = create3DObject(GL_TRIANGLES, 10*3, vertex_buffer_data, COLOR_REAL_BLACK, GL_FILL);
 }
 
 void Three::draw(glm::mat4 VP) {
@@ -231,7 +231,7 @@ Four::Four(float x, float y) {
         0.25f, 0.62f, 0,  //middle middle
         
     };
-    this->object = create3DObject(GL_TRIANGLES, 14*3, vertex_buffer_data, COLOR_REAL_BLACK, GL_FILL);
+    this->object = create3DObject(GL_TRIANGLES, 8*3, vertex_buffer_data, COLOR_REAL_BLACK, GL_FILL);
 }
 
 void Four::draw(glm::mat4 VP) {
@@ -291,7 +291,7 @@ Five::Five(float x, float y) {
         0.25f, 0.88f, 0,  //lower middle
         
     };
-    this->object = create3DObject(GL_TRIANGLES, 14*3, vertex_buffer_data, COLOR_REAL_BLACK, GL_FILL);
+    this->object = create3DObject(GL_TRIANGLES, 10*3, vertex_buffer_data, COLOR_REAL_BLACK, GL_FILL);
 }
 
 void Five::draw(glm::mat4 VP) {
@@ -351,7 +351,7 @@ Six::Six(float x, float y) {
 
         
     };
-    this->object = create3DObject(GL_TRIANGLES, 14*3, vertex_buffer_data, COLOR_REAL_BLACK, GL_FILL);
+    this->object = create3DObject(GL_TRIANGLES, 10*3, vertex_buffer_data, COLOR_REAL_BLACK, GL_FILL);
 }
 
 void Six::draw(glm::mat4 VP) {
@@ -396,7 +396,7 @@ Seven::Seven(float x, float y) {
         0.25f, 0.88f, 0,  //lower middle
         
     };
-    this->object = create3DObject(GL_TRIANGLES, 14*3, vertex_buffer_data, COLOR_REAL_BLACK, GL_FILL);
+    this->object = create3DObject(GL_TRIANGLES, 6*3, vertex_buffer_data, COLOR_REAL_BLACK, GL_FILL);
 }
 
 void Seven::draw(glm::mat4 VP) {
@@ -539,7 +539,7 @@ Nine::Nine(float x, float y) {
         0.25f, 0.88f, 0,  //lower middle
         
     };
-    this->object = create3DObject(GL_TRIANGLES, 14*3, vertex_buffer_data, COLOR_REAL_BLACK, GL_FILL);
+    this->object = create3DObject(GL_TRIANGLES, 12*3, vertex_buffer_data, COLOR_REAL_BLACK, GL_FILL);
 }
 
 void Nine::draw(glm::mat4 VP) {

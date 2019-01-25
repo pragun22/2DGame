@@ -48,7 +48,7 @@ Timer t60(1.0 / 60);
 
 /* Render the scene with openGL */
 /* Edit this function according to your assignment */
-void score_tick(int score,float x){
+void score_tick(float x, int score){
     float pos = x;
     while(score>0){
         int temp = score % 10;
@@ -276,7 +276,6 @@ void initGL(GLFWwindow *window, int width, int height) {
     /* Objects should be created before any other gl function and shaders */
     // Create the models
     float bottom = screen_center_y - 4.0f / screen_zoom;
-    one = One(-1,2);
     bond = clock();
     player = Player(-3.0f, bottom+2.0f, COLOR_BLACK,bottom);
     platform = Platform(-30.0f, bottom , 1);
