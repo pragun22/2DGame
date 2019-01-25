@@ -2,9 +2,83 @@
 #include "main.h"
 
 Dragon::Dragon(float x, float y) {
-    this->position = glm::vec3(x, y, 0);
+    const GLfloat vertex_buffer_data[]={
+    // Main Body
+    0, 0, 0,
+    0, 1.0f, 0,
+    3.0f, 1.5f,0,
+
+    0, 0, 0,
+    3.0f, -0.5f, 0,
+    3, 1.5f, 0,
+    // main body ends here
+    //tail
+    0, 0, 0,
+    0, 1, 0,
+    -1.0f, 0.25f, 0,
+
+    -1, 0.25f, 0,
+    -1, 0.75f, 0,
+    0, 1, 0,
+
+    -1, 0.25f, 0,
+    -1, 0.75f, 0,
+    -2, -1, 0,
+    // tail ends here
+
+    /* legs */
+    0, 0, 0,
+    0, -1.0f, 0,
+    1, -1.0f, 0,
+
+    0, -1.0f, 0,
+    1.0f, -1.0f, 0,
+    1.0f, -1.25f, 0,
+
+    1.0f, -1.0f, 0,
+    1.0f, -1.25f, 0,
+    2.0f, -1.25f, 0,
+
+    3.0f, -0.5f, 0,
+    3.0f, -1.0f, 0,
+    4.0f, -1.0f, 0,
+
+    3.0f, -1.0f, 0,
+    4.0f, -1.0f, 0,
+    4.0f ,-1.25f, 0,
     
-    this->object = create3DObject(GL_TRIANGLES, n*3, vertex_buffer_data, color, GL_FILL);
+    4.0f, -1.0f, 0,
+    4.0f, -1.25f, 0,
+    5.0f, -1.25f, 0,
+
+    //head
+    3.0f, -0.5f, 0.0f,
+    3.0f, 1.5f, 0.0f,
+    4.0f, 0.0f, 0.0f,
+
+    3.0f, 1.5f, 0.0f,
+    4.0f, 0.0f, 0.0f,
+    5.0f, 1.0f, 0.0f,
+    
+    3.0f, 1.5f, 0.0f,
+    5.0f, 1.0f, 0.0f,
+    5.0f, 2.0f, 0.0f,
+    
+    5.0f, 1.0f, 0.0f,
+    5.0f, 2.0f, 0.0f,
+    6.0f, 2.0f, 0.0f,
+    
+    5.0f, 2.0f, 0.0f,
+    6.0f, 2.0f, 0.0f,
+    6.0f, 3.0f, 0.0f,
+    
+    6.0f, 2.0f, 0.0f,
+    6.0f, 3.0f, 0.0f,
+    7.0f, 2.0f, 0.0f,
+
+
+    };
+    this->object = create3DObject(GL_TRIANGLES, 6*3, vertex_buffer_data, color_buffer, GL_FILL);
 }
 
 void Dragon::draw(glm::mat4 VP) {
