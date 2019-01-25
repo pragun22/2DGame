@@ -49,18 +49,18 @@ Timer t60(1.0 / 60);
 /* Render the scene with openGL */
 /* Edit this function according to your assignment */
 void score_tick(float x, int score){
-    float pos = x;
+    float pos = x+2;
     while(score>0){
         int temp = score % 10;
-        if(temp==1) one.push_back(One(pos, 7));
-        if(temp==2) two.push_back(Two(pos, 7));
-        if(temp==3) three.push_back(Three(pos, 7));
-        if(temp==4) four.push_back(Four(pos, 7));
-        if(temp==5) five.push_back(Five(pos, 7));
-        if(temp==6) six.push_back(Six(pos, 7));
-        if(temp==7) seven.push_back(Seven(pos, 7));
-        if(temp==8) eight.push_back(Eight(pos, 7));
-        if(temp==9) nine.push_back(Nine(pos, 7));
+        if(temp==1){ if(one.size()>0) one.pop_back(); one.push_back(One(pos, 7));}
+        if(temp==2){ if(two.size()>0)two.pop_back();two.push_back(Two(pos, 7));}
+        if(temp==3){ if(three.size()>0)three.pop_back();three.push_back(Three(pos, 7));}
+        if(temp==4){ if(four.size()>0)four.pop_back();four.push_back(Four(pos, 7));}
+        if(temp==5){ if(five.size()>0)five.pop_back();five.push_back(Five(pos, 7));}
+        if(temp==6){ if(six.size()>0)six.pop_back();six.push_back(Six(pos, 7));}
+        if(temp==7){ if(seven.size()>0)seven.pop_back();seven.push_back(Seven(pos, 7));}
+        if(temp==8){ if(eight.size()>0)eight.pop_back();eight.push_back(Eight(pos, 7));}
+        if(temp==9){ if(nine.size()>0)nine.pop_back();nine.push_back(Nine(pos, 7));}
         pos += 1.1f;
         score = score / 10;
     }
@@ -275,6 +275,7 @@ void tick_elements() {
 void initGL(GLFWwindow *window, int width, int height) {
     /* Objects should be created before any other gl function and shaders */
     // Create the models
+
     float bottom = screen_center_y - 4.0f / screen_zoom;
     bond = clock();
     player = Player(-3.0f, bottom+2.0f, COLOR_BLACK,bottom);
