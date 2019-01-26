@@ -34,9 +34,9 @@ Platform::Platform(float x, float y, float depth) {
     for(i = 0 ; i < 12000*3;i+=3)
     {
         itr++;
-        flag? color_buffer[i] = 98.0/256.0:color_buffer[i]=66.0/256.0;
-        flag? color_buffer[i+1] = 244.0/256.0:color_buffer[i+1]=134.0/256.0;
-        flag? color_buffer[i+2] = 66.0/256.0:color_buffer[i+2]=244.0/256.0;
+        flag? color_buffer[i] = 76.0/256.0:color_buffer[i]=167.0/256.0;
+        flag? color_buffer[i+1] = 70.0/256.0:color_buffer[i+1]=113.0/256.0;
+        flag? color_buffer[i+2] = 50.0/256.0:color_buffer[i+2]=47.0/256.0;
         if(itr==6)
         {
             if(flag)  flag = false;

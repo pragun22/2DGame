@@ -16,6 +16,7 @@ public:
     float yspeed;
     float xspeed;
     bool safe;
+    bool sword;
     void draw(glm::mat4 VP);
     void set_position(float x, float y);
     void jump();
@@ -24,6 +25,7 @@ public:
     double speed;
 private:
     VAO *object;
+    VAO *sord;
 };
 
 #endif // BALL_H

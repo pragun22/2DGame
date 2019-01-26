@@ -28,7 +28,7 @@ SpeedUp::SpeedUp(float x, float y,float bottom) {
 	}
     // const GLfloat color_buffer[]={
     // };
-    this->object = create3DObject(GL_TRIANGLES, 3*n, vertex_buffer_data, COLOR_RED, GL_FILL);
+    this->object = create3DObject(GL_TRIANGLES, 3*n, vertex_buffer_data, COLOR_POW, GL_FILL);
 }
 
 void SpeedUp::draw(glm::mat4 VP) {
@@ -93,7 +93,7 @@ CoinsUp::CoinsUp(float x, float y,float bottom) {
 	}
     // const GLfloat color_buffer[]={
     // };
-    this->object = create3DObject(GL_TRIANGLES, 3*n, vertex_buffer_data, COLOR_BLACK, GL_FILL);
+    this->object = create3DObject(GL_TRIANGLES, 3*n, vertex_buffer_data, COLOR_GREEN, GL_FILL);
 }
 
 void CoinsUp::draw(glm::mat4 VP) {
@@ -117,15 +117,93 @@ bool CoinsUp::detect_collision(bounding_box_t a, bounding_box_t b) {
     return (x && y);
 }
 void CoinsUp::tick(){
-    if(this->yspeed>0) this->yspeed += 0.001f;
-    else this->yspeed -= 0.001f;
-    
-    
     this->position.x += this->xspeed;
-    if(this->position.y > 0-this->miny){
-        this->yspeed = -0.03;
-    }    
-    else if(this->position.y < this->miny+2) this ->yspeed = 0.03;
-    this->position.y += this->yspeed;
-    
+    this->position.y = 4*sin(this->position.x);
 };
+
+Sword::Sword(float x, float y,float bottom) {
+    this->position = glm::vec3(x, y, 0);
+    this->rotation = 0.0f;
+    speed = 0.01;
+    this->yspeed = 0.1;
+    this->miny = bottom+2;
+    this->xspeed = -0.03;
+    const GLfloat vertex_buffer_data[]={
+        0.0f, 0.0f, 0.0f,
+        0.0f, 2.0f, 0.0f,
+        0.35f, 2.0f, 0.0f,
+
+        0.0f, 0.0f, 0.0f,
+        0.35f, 2.0f, 0.0f,
+        0.35f, 0.0f, 0.0f, 
+
+        0.17f, 2.5f, 0.0f,
+        0.0f, 2.0f, 0.0f,
+        0.35f, 2.0f, 0.0f, //upper blade
+
+        -0.75f, 0.0f, 0.0f,
+        -0.75f, -0.15f, 0.0f,
+        1.1f, -0.15f, 0.0f,
+
+        -0.75f, 0.0f, 0.0f,
+        1.1f, 0.0f, 0.0f,
+        1.1f, -0.15f, 0.0f,
+
+        0.0f, -0.15f, 0.0f,
+        0.35f, -0.15f, 0.0f,
+        0.35f, -0.8f, 0.0f,
+
+        0.0f, -0.15f, 0.0f,
+        0.35f, -0.8f, 0.0f,
+        0.0f, -0.8f, 0.0f,  //grip
+    };
+    const GLfloat color_data[]={
+
+        192.0f/256.0f,192.0f/256.0f,192.0f/256.0f,         
+        192.0f/256.0f,192.0f/256.0f,192.0f/256.0f, 
+        192.0f/256.0f,192.0f/256.0f,192.0f/256.0f, 
+  
+        192.0f/256.0f,192.0f/256.0f,192.0f/256.0f, 
+        192.0f/256.0f,192.0f/256.0f,192.0f/256.0f, 
+        192.0f/256.0f,192.0f/256.0f,192.0f/256.0f, 
+  
+        192.0f/256.0f,192.0f/256.0f,192.0f/256.0f, 
+        192.0f/256.0f,192.0f/256.0f,192.0f/256.0f, 
+        192.0f/256.0f,192.0f/256.0f,192.0f/256.0f, 
+
+        32.0f/256.0f,32.0f/256.0f,32.0f/256.0f,
+        32.0f/256.0f,32.0f/256.0f,32.0f/256.0f,
+        32.0f/256.0f,32.0f/256.0f,32.0f/256.0f,
+  
+        32.0f/256.0f,32.0f/256.0f,32.0f/256.0f,
+        32.0f/256.0f,32.0f/256.0f,32.0f/256.0f,
+        32.0f/256.0f,32.0f/256.0f,32.0f/256.0f,
+  
+        32.0f/256.0f,32.0f/256.0f,32.0f/256.0f,
+        32.0f/256.0f,32.0f/256.0f,32.0f/256.0f,
+        32.0f/256.0f,32.0f/256.0f,32.0f/256.0f,
+  
+        32.0f/256.0f,32.0f/256.0f,32.0f/256.0f,
+        32.0f/256.0f,32.0f/256.0f,32.0f/256.0f,
+        32.0f/256.0f,32.0f/256.0f,32.0f/256.0f
+    };
+    this->object = create3DObject(GL_TRIANGLES, 7*3, vertex_buffer_data, color_data, GL_FILL);
+}
+
+void Sword::draw(glm::mat4 VP) {
+    Matrices.model = glm::mat4(1.0f);
+    glm::mat4 translate = glm::translate (this->position);    // glTranslatef
+    glm::mat4 rotate    = glm::rotate((float) (this->rotation * M_PI / 180.0f), glm::vec3(0, 0, 1));
+    // No need as coords centered at 0, 0, 0 of cube arouund which we waant to rotate
+    // rotate          = rotate * glm::translate(glm::vec3(0, -0.6, 0));
+    Matrices.model *= (translate * rotate);
+    glm::mat4 MVP = VP * Matrices.model;
+    glUniformMatrix4fv(Matrices.MatrixID, 1, GL_FALSE, &MVP[0][0]);
+    draw3DObject(this->object);
+}
+void Sword::tick(){
+    this->position.x += this->xspeed;
+    this->position.y = 4*sin(this->position.x) - 2*cos(this->position.x);
+};
+
+

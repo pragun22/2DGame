@@ -6,14 +6,14 @@ Tunnel::Tunnel(float x, float y) {
     this->rot = 180.0f;
     speed = 0.01;
     int n = 50;
-    int inc = 0;
+    int inc = 0.0f;
     float r = 9.0f ;
     GLfloat vertex_buffer_data[9*n/2];
     GLfloat vertex_buffer_data1[9*n/2];
 	for (int i = 0; i < 9*n/2; i+=9)
 	{
 		float angle = 2*M_PI*inc/n;
-		// if(inc==n) angle = 0;
+        // if(inc==n) angle = 0;
 		vertex_buffer_data[i]=r*cos(angle);
 		vertex_buffer_data[i+1]=r*sin(angle);
 		vertex_buffer_data[i+2]=0;
@@ -23,7 +23,7 @@ Tunnel::Tunnel(float x, float y) {
 		vertex_buffer_data[i+6]=r*cos(2*M_PI*+(inc+1)/n);
 		vertex_buffer_data[i+7]=r*sin(2*M_PI*+(inc+1)/n);
 		vertex_buffer_data[i+8]=0;
-		inc++;
+		inc+=1;
 	}
     inc = 0;
     for (int i = 0; i < 9*n/2; i+=9)
@@ -41,7 +41,7 @@ Tunnel::Tunnel(float x, float y) {
 		vertex_buffer_data1[i+8]=0;
 		inc++;
 	}
-    this->object = create3DObject(GL_TRIANGLES, 3*n/2, vertex_buffer_data, COLOR_REAL_BLACK, GL_FILL);
+    this->object = create3DObject(GL_TRIANGLES, 3*n/2, vertex_buffer_data, COLOR_TUNNEL, GL_FILL);
     this->object1 = create3DObject(GL_TRIANGLES, 3*n/2, vertex_buffer_data1, COLOR_BACKGROUND, GL_FILL);
 }
 

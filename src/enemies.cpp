@@ -41,13 +41,13 @@ Firelines::Firelines(float x, float y) {
         34.0/256.0, 34.0/256.0, 105.0/256.0,
         34.0/256.0, 34.0/256.0, 105.0/256.0, /* left dumble */
         
-        220.0/256.0, 120.0/256.0, 109.0/256.0,
-        220.0/256.0, 120.0/256.0, 109.0/256.0,
-        220.0/256.0, 120.0/256.0, 109.0/256.0,
+        226.0/256.0, 40.0/256.0, 34.0/256.0,
+        226.0/256.0, 40.0/256.0, 34.0/256.0,
+        226.0/256.0, 40.0/256.0, 34.0/256.0,
 
-        220.0/256.0, 120.0/256.0, 109.0/256.0,
-        220.0/256.0, 120.0/256.0, 109.0/256.0,
-        220.0/256.0, 120.0/256.0, 109.0/256.0, /* middle body */
+        226.0/256.0, 40.0/256.0, 34.0/256.0,
+        226.0/256.0, 40.0/256.0, 34.0/256.0,
+        226.0/256.0, 40.0/256.0, 34.0/256.0, /* middle body */
 
         34.0/256.0, 34.0/256.0, 105.0/256.0,
         34.0/256.0, 34.0/256.0, 105.0/256.0,
@@ -85,35 +85,30 @@ bool Firelines::detect_collision(bounding_box_t a){
     for(float i = a.y ; i < a.y+a.height - 0.4f ; i+=0.05f){
         float dist  = ((a.x+a.width)*m + i - c)/normaliser;
         if(abs(dist)<0.1){
-            std::cout<<a.y<<" -right se kata- "<<i<<" "<<dist<<std::endl;
-            exit(0);
+            return true;
         } 
     }
     for(float i = a.y ; i < a.y+a.height ; i+=0.05f){
         float dist  = (a.x*m + i - c)/normaliser;
         if(abs(dist)<0.1){
-            std::cout<<a.y<<" -left se kata- "<<i<<" "<<dist<<std::endl;
-            exit(0);
+            return true;            
         } 
     }
     float c2 = 2.2f*normaliser - c;
     for(float i = a.y ; i < a.y+a.height - 0.4f; i+=0.05f){
         float dist  = ((a.x+a.width)*m + i - c2)/normaliser;
         if(abs(dist)<0.1){
-            std::cout<<a.y<<" -right se kata- "<<i<<" "<<dist<<std::endl;
-            exit(0);
-
+            return true;
         } 
     }
     for(float i = a.y ; i < a.y+a.height ; i+=0.05f){
         float dist  = (a.x*m + i - c2)/normaliser;
         if(abs(dist)<0.1){
-            std::cout<<a.y<<" -left se kata- "<<i<<" "<<dist<<std::endl;
-            exit(0);
+            return true;            
         } 
     }
     
-    return true;
+    return false;
 }
 
 Firebeams::Firebeams(float x, float y) {
@@ -156,13 +151,13 @@ Firebeams::Firebeams(float x, float y) {
         34.0/256.0, 34.0/256.0, 105.0/256.0,
         34.0/256.0, 34.0/256.0, 105.0/256.0, /* left dumble */
         
-        242.0/256.0, 40.0/256.0, 34.0/256.0,
-        242.0/256.0, 40.0/256.0, 34.0/256.0,
-        242.0/256.0, 40.0/256.0, 34.0/256.0,
+        226.0/256.0, 40.0/256.0, 34.0/256.0,
+        226.0/256.0, 40.0/256.0, 34.0/256.0,
+        226.0/256.0, 40.0/256.0, 34.0/256.0,
 
-        242.0/256.0, 40.0/256.0, 34.0/256.0,
-        242.0/256.0, 40.0/256.0, 34.0/256.0,
-        242.0/256.0, 40.0/256.0, 34.0/256.0,/* middle body */
+        226.0/256.0, 40.0/256.0, 34.0/256.0,
+        226.0/256.0, 40.0/256.0, 34.0/256.0,
+        226.0/256.0, 40.0/256.0, 34.0/256.0,/* middle body */
 
         34.0/256.0, 34.0/256.0, 105.0/256.0,
         34.0/256.0, 34.0/256.0, 105.0/256.0,
@@ -240,7 +235,7 @@ Boomerang::Boomerang(float x, float y, float cen_x, float cen_y){
     };
     // const GLfloat color_buffer[]={
     // };
-    this->object = create3DObject(GL_TRIANGLES, 2*3, vertex_buffer_data, COLOR_BLACK, GL_FILL);
+    this->object = create3DObject(GL_TRIANGLES, 2*3, vertex_buffer_data, COLOR_SPARKLE, GL_LINE);
     
 }
 void Boomerang::draw(glm::mat4 VP) {
@@ -256,8 +251,8 @@ void Boomerang::draw(glm::mat4 VP) {
     draw3DObject(this->object);
 }
 void Boomerang::tick(){
-    this->rotation +=1.2f;
-    this->degree += 0.01f;
+    this->rotation +=3.2f;
+    this->degree += 0.025f;
     if(this->rotation > 360.0f) this->rotation = 0.0f;
     if(this->degree > 360.0f) this->degree = 0.0f;
     this->position.x = this->x + 15*cos(this->degree);

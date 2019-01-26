@@ -38,6 +38,7 @@ vector<Seven> seven;
 vector<Eight> eight;
 vector<Nine> nine;
 vector<Fire> fire;
+vector<Sword> sword;
 std::vector<SpeedUp> speeds;
 std::vector<Firelines> firelines;
 std::vector<Firebeams> firebeams;
@@ -46,12 +47,15 @@ std::vector<Balloon> balloons;
 vector<Boomerang> boomerang;
 vector<Magnet> mag;
 int score = 0;
-float screen_zoom = 0.5f, screen_center_x = 0, screen_center_y = 0;
+float screen_zoom = 0.35f, screen_center_x = 0, screen_center_y = 0;
 float camera_rotation_angle = 0;
 int pos = 0;
 double acc = 0.0;
+float run_x = 0.2f;
+float run_y = 0.3f;
 clock_t bond;
 clock_t firet;
+clock_t safe;
 int lives = 5;
 Timer t60(1.0 / 60);
 
@@ -159,6 +163,7 @@ void draw() {
     for(int i = 0; i < speeds.size() ; i++) speeds[i].draw(VP);
     for(int i = 0; i < pow_coins.size() ; i++) pow_coins[i].draw(VP);
     for(int i = 0; i < coins.size(); i++) coins[i].draw(VP);
+    for(int i = 0; i < sword.size(); i++) sword[i].draw(VP);
     tunnel.draw(VP);
     player.draw(VP);
     platform.draw(VP);
@@ -194,11 +199,11 @@ void tick_input(GLFWwindow *window) {
     }
     if(zoom_in) {   
         screen_zoom+=0.1f;
-        if(screen_zoom>2.0f) screen_zoom = 2.0f;
+        if(screen_zoom>1.7f) screen_zoom = 1.7f;
     }
     if(zoom_out) {
         screen_zoom-=0.1f;
-        if(screen_zoom<0.5f) screen_zoom = 0.5f;
+        if(screen_zoom<0.35f) screen_zoom = 0.35f;
     }
     if(right) {
         float factor = 1.0f;
@@ -221,8 +226,11 @@ void tick_elements() {
     live_tick(lives);
     player.tick();
     tunnel.tick(&player);
-    for(int i = 0 ; i < speeds.size(); i++) speeds[i].tick();
-    for(int i = 0 ; i < pow_coins.size(); i++) pow_coins[i].tick();
+    if(player.safe){
+        clock_t temp = clock();
+        int timer = (int)(temp - safe)/CLOCKS_PER_SEC;
+        if(timer > 6) player.safe = false;
+    }
     bounding_box_t a;
     a.x = player.position.x;
     a.y = player.position.y-1.0f;
@@ -234,8 +242,8 @@ void tick_elements() {
     tun.height = 1.0f;
     tun.width = 2.0f;
     if(detect_collision(a,tun)){
-        cout<<tun.x<<"-"<<a.x<<" "<<tun.y<<" "<<endl;
         player.safe = true;
+        safe = clock();
     } 
     if(dragon.position.x - player.position.x < 13.0f){
         clock_t sta = clock();
@@ -259,6 +267,61 @@ void tick_elements() {
         dragon.position.x += 20.0f;
         player.position.x -= 10.0f;
         usleep(45000);
+    }
+    for(int i = 0 ; i< speeds.size();i++){
+        speeds[i].tick();
+        bounding_box_t pow;
+        pow.x = speeds[i].position.x - 0.6f*cos(M_PI/5.0f);
+        pow.y = speeds[i].position.y - 0.6f*sin(M_PI/5.0f);
+        pow.height = (0.6f + 0.6f*cos(M_PI/5.0f));
+        pow.width = (0.6f + 0.6f*cos(M_PI/5.0f));
+        if(detect_collision(a,pow)){
+            speeds.erase(speeds.begin()+i);
+            lives+=1;
+            break;
+        }
+    }
+    for(int i = 0 ; i< pow_coins.size();i++){
+        pow_coins[i].tick();
+        bounding_box_t pow;
+        pow.x = pow_coins[i].position.x - 0.6f*cos(M_PI/5.0f);
+        pow.y = pow_coins[i].position.y - 0.6f*sin(M_PI/5.0f);
+        pow.height = (0.6f + 0.6f*cos(M_PI/5.0f));
+        pow.width = (0.6f + 0.6f*cos(M_PI/5.0f));
+        if(detect_collision(a,pow)){
+            pow_coins.erase(pow_coins.begin()+i);
+            score += 40;
+            break;
+        }
+    }
+    for(int i = 0; i<coins.size();i++){
+        bounding_box_t b;
+        b.x = coins[i].position.x-0.2f;
+        b.y = coins[i].position.y-0.2f;
+        b.width = 0.4;
+        b.height = 0.4;
+        if(detect_collision(a,b)){
+            if(coins[i].r == 0.2f) score+=1;
+            else score +=5;
+            coins.erase(coins.begin()+i);
+        }
+    }
+    for(int i = 0 ; i < sword.size() ; i++){
+        sword[i].tick();
+        bounding_box_t tall,wid;
+        tall.x = sword[i].position.x;
+        tall.y = sword[i].position.y-0.80f;
+        tall.width = 0.35f;
+        tall.height = 3.0f;
+        wid.x = sword[i].position.x - 0.75f;
+        wid.y = sword[i].position.y - 0.15f;
+        wid.height = 0.15f;
+        wid.width = 1.85f;
+        if(detect_collision(a,tall) || detect_collision(a,wid)){
+            cout<<"ab  ye krke dikhao"<<endl;
+            player.sword = true;
+        }
+        
     }
     if(!player.safe){
         for(int i = 0; i < fire.size(); i++){
@@ -285,7 +348,14 @@ void tick_elements() {
             field.height = 5.0f;
             if(detect_collision(a,field)){
                 cout<<field.y<<" aaj mai krke aaya "<<rand()<<endl;
-                firelines[i].detect_collision(a);
+                if(firelines[i].detect_collision(a)){
+                    if(player.sword == false ) lives--;
+                    else firelines.erase(firelines.begin()+i);
+                }
+                if(player.sword){
+                    firelines[i].position.x += run_x;
+                    firelines[i].position.y -= run_y;
+                }
             }
             for(int j = 0; j < balloons.size(); j++)
             {
@@ -328,10 +398,14 @@ void tick_elements() {
             boomer.width = 1.0f;
             boomer.height = 0.5f;
             if(detect_collision(boomer, a)){
-                lives--;
+                if(!player.sword)lives--;
                 boomerang.erase(boomerang.begin()+i);
                 usleep(90000);
                 player.position.x += 5.0f;
+            }
+            if(player.sword){
+                    boomerang[i].position.x += run_x;
+                    boomerang[i].position.y -= run_y;
             }
         } 
         for(int i = 0; i < firebeams.size(); i++){
@@ -350,46 +424,13 @@ void tick_elements() {
                     usleep(90000);
                     player.position.x += 5.0f;
                 }
-            }
-                
-        }
+                if(player.sword){
+                    firebeams[i].flag = false;
+                }
+            }         
+         }
     }
-    for(int i = 0 ; i< speeds.size();i++){
-        bounding_box_t pow;
-        pow.x = speeds[i].position.x - 0.6f*cos(M_PI/5.0f);
-        pow.y = speeds[i].position.y - 0.6f*sin(M_PI/5.0f);
-        pow.height = (0.6f + 0.6f*cos(M_PI/5.0f));
-        pow.width = (0.6f + 0.6f*cos(M_PI/5.0f));
-        if(detect_collision(a,pow)){
-            speeds.erase(speeds.begin()+i);
-            lives+=1;
-            break;
-        }
-    }
-    for(int i = 0 ; i< pow_coins.size();i++){
-        bounding_box_t pow;
-        pow.x = pow_coins[i].position.x - 0.6f*cos(M_PI/5.0f);
-        pow.y = pow_coins[i].position.y - 0.6f*sin(M_PI/5.0f);
-        pow.height = (0.6f + 0.6f*cos(M_PI/5.0f));
-        pow.width = (0.6f + 0.6f*cos(M_PI/5.0f));
-        if(detect_collision(a,pow)){
-            pow_coins.erase(pow_coins.begin()+i);
-            score += 40;
-            break;
-        }
-    }
-    for(int i = 0; i<coins.size();i++){
-        bounding_box_t b;
-        b.x = coins[i].position.x-0.2f;
-        b.y = coins[i].position.y-0.2f;
-        b.width = 0.4;
-        b.height = 0.4;
-        if(detect_collision(a,b)){
-            if(coins[i].r == 0.2f) score+=1;
-            else score +=5;
-            coins.erase(coins.begin()+i);
-        }
-    }
+    //end of if conditton
 }
 /* Initialize the OpenGL rendering properties */
 /* Add all the models to be created here */
@@ -401,11 +442,12 @@ void initGL(GLFWwindow *window, int width, int height) {
     bond = clock();
     firet = clock();
     player = Player(-3.0f, bottom+2.0f, COLOR_BLACK,bottom);
-    dragon = Dragon(4.0f,2.0f);
+    dragon = Dragon(244.0f,2.0f);
     tunnel = Tunnel(22.0f,-1.0f);
     platform = Platform(-30.0f, bottom , 1);
     speeds.push_back(SpeedUp(5.0f, 3.0f, bottom));
     pow_coins.push_back(CoinsUp(10.0f, 0.0f, bottom));
+    sword.push_back(Sword(5,2,bottom));
     for(int i = 0 ; i < 15 ; i++){
         float x = 15 + ((float)i/1.5f)*21.2f;
         firelines.push_back(Firelines(x,2));

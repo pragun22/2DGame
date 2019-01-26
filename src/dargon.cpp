@@ -144,7 +144,7 @@ Fire::Fire(float x, float y,int type) {
         -2.1f, 0.0f, 0.0f,                
     };
     if(this->type==0) this->object = create3DObject(GL_TRIANGLES, 6*3, vertex_buffer_data, COLOR_COIN, GL_FILL);
-    else this->object = create3DObject(GL_TRIANGLES, 6*3, vertex_buffer_data, COLOR_REAL_BLACK, GL_FILL);
+    else this->object = create3DObject(GL_TRIANGLES, 6*3, vertex_buffer_data, COLOR_SPARKLE, GL_FILL);
 }
 
 void Fire::draw(glm::mat4 VP) {
