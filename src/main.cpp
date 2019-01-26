@@ -258,6 +258,12 @@ void tick_elements() {
     }
     if(!player.safe){
         for(int i = 0; i < fire.size(); i++){
+            bounding_box_t b;
+            b.x = fire[i].position.x;
+            b.y = fire[i].position.y;
+            b.width = 0.4f;
+            b.height = 0.25f;
+            if(fire[i].type==0 && detect_collision(a,b)) exit(0);
            float  timer =  fire[i].tick(player.position.y - dragon.position.y);
            float limit;
            if(fire[i].type) limit = 0.4f;
@@ -309,23 +315,6 @@ void tick_elements() {
                 balloons.erase(balloons.begin()+i);
                 break;
             }
-            // for(int j = 0 ; j < firelines.size() ; j++){
-            //     bounding_box_t field;
-            //     field.x = firelines[j].position.x-1.3f;
-            //     field.y = firelines[j].position.y+0.4f;
-            //     field.width = 5.0f;
-            //     field.height = 5.0f;
-                // bounding_box_t ba;
-                // ba.x = balloons[i].position.x - 0.4f;
-                // ba.y = balloons[i].position.y - 0.4f;
-                // ba.height = 0.4f;
-                // ba.width = 0.4f; 
-                // if(detect_collision(field,ba) && firelines[j].detect_collision(ba)){
-                //     firelines.erase(firelines.begin()+j);
-                //     balloons.erase(balloons.begin()+i);                
-                //     break;
-                // }
-            // }
         }
         for(int i =0; i < boomerang.size(); i++){
             boomerang[i].tick();

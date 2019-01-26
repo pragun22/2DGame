@@ -181,5 +181,3 @@ float Fire::tick(float a){
 
 
 
-
-
