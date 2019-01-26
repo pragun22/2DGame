@@ -5,6 +5,7 @@
 #include "magnet.h"
 #include "balloon.h"
 #include "special.h"
+#include "dragon.h"
 #include "enemies.h"
 #include "platform.h"
 #include "score.h"
@@ -21,6 +22,7 @@ GLFWwindow *window;
 vector<Ball> coins;
 set<int> del_coins;
 Player player;
+Dragon dragon;
 Platform platform;
 vector<One> one;
 vector<Two> two;
@@ -49,7 +51,7 @@ Timer t60(1.0 / 60);
 /* Render the scene with openGL */
 /* Edit this function according to your assignment */
 void score_tick(float x, int score){
-    float pos = x+2;
+    float pos = screen_center_x+3;
     while(score>0){
         int temp = score % 10;
         if(temp==1){ if(one.size()>0) one.pop_back(); one.push_back(One(pos, 7));}
@@ -96,6 +98,7 @@ void draw() {
 
     // Scene render
     // ball1.draw(VP);
+    dragon.draw(VP);
     player.draw(VP);
     platform.draw(VP);
     for(int i = 0; i < one.size();i++) one[i].draw(VP);
@@ -279,6 +282,7 @@ void initGL(GLFWwindow *window, int width, int height) {
     float bottom = screen_center_y - 4.0f / screen_zoom;
     bond = clock();
     player = Player(-3.0f, bottom+2.0f, COLOR_BLACK,bottom);
+    dragon = Dragon(4.0f,2.0f);
     platform = Platform(-30.0f, bottom , 1);
     speeds.push_back(SpeedUp(5.0f, 3.0f, bottom));
     pow_coins.push_back(CoinsUp(10.0f, 0.0f, bottom));

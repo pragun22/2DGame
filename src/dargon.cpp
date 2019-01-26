@@ -87,7 +87,7 @@ Dragon::Dragon(float x, float y) {
 
 
     };
-    this->object = create3DObject(GL_TRIANGLES, 18*3, vertex_buffer_data, COLOR_BLACK, GL_FILL);
+    this->object = create3DObject(GL_TRIANGLES, 19*3, vertex_buffer_data, COLOR_BLACK, GL_FILL);
 }
 
 void Dragon::draw(glm::mat4 VP) {
