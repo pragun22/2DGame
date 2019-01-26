@@ -308,10 +308,10 @@ void initGL(GLFWwindow *window, int width, int height) {
     platform = Platform(-30.0f, bottom , 1);
     speeds.push_back(SpeedUp(5.0f, 3.0f, bottom));
     pow_coins.push_back(CoinsUp(10.0f, 0.0f, bottom));
-    // for(int i = 0 ; i < 15 ; i++){
-    //     float x = 15 + ((float)i/1.5f)*21.2f;
-    //     firelines.push_back(Firelines(x,2));
-    // }
+    for(int i = 0 ; i < 15 ; i++){
+        float x = 15 + ((float)i/1.5f)*21.2f;
+        firelines.push_back(Firelines(x,2));
+    }
     firebeams.push_back(Firebeams(6, 6));
     for(int i = 0; i < 10 ; i++){
         float x = 20.0f + i*26.3f;
@@ -434,9 +434,9 @@ void reset_screen() {
     float left   = screen_center_x - 4 / screen_zoom;
     float right  = screen_center_x + 4 / screen_zoom;
     if(player.position.x < screen_center_x - 2.0f && !player.safe) player.position.x = screen_center_x - 2.0f;
-    else screen_center_x = player.position.x + 2.0f;
     if(player.position.x > screen_center_x + 1.0f && !player.safe) player.position.x = screen_center_x + 1.0f;
-    else screen_center_x = player.position.x - 1.0f;
+    if(player.position.x < screen_center_x - 2.0f && player.safe) screen_center_x = player.position.x + 2.0f;
+    if(player.position.x > screen_center_x + 1.0f && player.safe) screen_center_x = player.position.x - 1.0f;
     // if(player.yspeed==0){ 
     //     player.position.y = bottom+2;
     // }
