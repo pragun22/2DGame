@@ -164,7 +164,7 @@ void draw() {
     for(int i = 0; i < pow_coins.size() ; i++) pow_coins[i].draw(VP);
     for(int i = 0; i < coins.size(); i++) coins[i].draw(VP);
     for(int i = 0; i < sword.size(); i++) sword[i].draw(VP);
-    tunnel.draw(VP);
+    // tunnel.draw(VP);
     player.draw(VP);
     platform.draw(VP);
 
@@ -197,14 +197,14 @@ void tick_input(GLFWwindow *window) {
             firet = clock();
         }
     }
-    if(zoom_in) {   
-        screen_zoom+=0.1f;
-        if(screen_zoom>1.7f) screen_zoom = 1.7f;
-    }
-    if(zoom_out) {
-        screen_zoom-=0.1f;
-        if(screen_zoom<0.35f) screen_zoom = 0.35f;
-    }
+    // if(zoom_in) {   
+    //     screen_zoom+=0.1f;
+    //     if(screen_zoom>1.7f) screen_zoom = 1.7f;
+    // }
+    // if(zoom_out) {
+    //     screen_zoom-=0.1f;
+    //     if(screen_zoom<0.35f) screen_zoom = 0.35f;
+    // }
     if(right) {
         float factor = 1.0f;
         if(player.position.x >= screen_center_x + 1.0f ) screen_center_x += 0.24f,factor = 2.0f;
@@ -225,10 +225,11 @@ void tick_elements() {
     score_tick(player.position.x, score);
     live_tick(lives);
     player.tick();
-    tunnel.tick(&player);
+    // tunnel.tick(&player);
     if(player.sword){
         clock_t temp = clock();
         int timer = (int)(temp - safe)/CLOCKS_PER_SEC;
+        cout<<timer<<endl;
         if(timer > 6) player.sword = false;
     }
     bounding_box_t a;
@@ -320,6 +321,7 @@ void tick_elements() {
         if(detect_collision(a,tall) || detect_collision(a,wid)){
             cout<<"ab  ye krke dikhao"<<endl;
             player.sword = true;
+            safe = clock();
         }
         
     }
@@ -341,21 +343,24 @@ void tick_elements() {
            }
         }
         for(int i =0; i < firelines.size(); i++){
+            firelines[i].tick(&player);
             bounding_box_t field;
-            field.x = firelines[i].position.x-1.3f;
+            field.x = firelines[i].position.x-2.0f;
             field.y = firelines[i].position.y+0.4f;
-            field.width = 4.0f;
+            field.width = 8.0f;
             field.height = 5.0f;
             if(detect_collision(a,field)){
                 cout<<field.y<<" aaj mai krke aaya "<<rand()<<endl;
-                if(firelines[i].detect_collision(a)){
-                    if(player.sword == false ) lives--;
-                    else firelines.erase(firelines.begin()+i);
+                if(player.sword){
+                    firelines[i].position.x += run_x;
+                    firelines[i].position.y += run_y;
                 }
-            }
-            if(player.sword){
-                firelines[i].position.x += run_x;
-                firelines[i].position.y -= run_y;
+                if(firelines[i].detect_collision(a)){
+                    firelines.erase(firelines.begin()+i);
+                    if(!player.sword){
+                        // lives--;
+                    }
+                }
             }
             for(int j = 0; j < balloons.size(); j++)
             {
@@ -443,7 +448,7 @@ void initGL(GLFWwindow *window, int width, int height) {
     firet = clock();
     player = Player(-3.0f, bottom+2.0f, COLOR_BLACK,bottom);
     dragon = Dragon(244.0f,2.0f);
-    tunnel = Tunnel(22.0f,-1.0f);
+    // tunnel = Tunnel(22.0f,-1.0f);
     platform = Platform(-30.0f, bottom , 1);
     speeds.push_back(SpeedUp(5.0f, 3.0f, bottom));
     pow_coins.push_back(CoinsUp(10.0f, 0.0f, bottom));

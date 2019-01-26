@@ -64,7 +64,6 @@ void Tunnel::tick(Player* hooman){
         if(this->rot > 0.0f) this->rot -= 1.0f;
         else hooman->safe = false;
         hooman->position.x = this->position.x + 7.7f*cos((float) (this->rot * M_PI / 180.0f));
-        std::cout<<hooman->position.x<<std::endl;
         hooman->position.y = this->position.y + 8.5f*sin((float) (this->rot * M_PI / 180.0f));
     }
 }
