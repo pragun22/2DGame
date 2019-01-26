@@ -254,7 +254,11 @@ void tick_elements() {
     draco.width = 9.0f;
     draco.height = 5.0f;
     if(detect_collision(draco,a)){
-        score+=1682300;
+    //   delete &dragon;
+        score = 0;
+        dragon.position.x += 20.0f;
+        player.position.x -= 10.0f;
+        usleep(45000);
     }
     if(!player.safe){
         for(int i = 0; i < fire.size(); i++){
@@ -325,8 +329,9 @@ void tick_elements() {
             boomer.height = 0.5f;
             if(detect_collision(boomer, a)){
                 lives--;
-                player.position.x += 15.0f;
-                usleep(1000000);
+                boomerang.erase(boomerang.begin()+i);
+                usleep(90000);
+                player.position.x += 5.0f;
             }
         } 
         for(int i = 0; i < firebeams.size(); i++){
@@ -339,7 +344,12 @@ void tick_elements() {
             fire.height = 0.8f*0.7;
             if(detect_collision(a,fire)){
                 
-                if(firebeams[i].flag) lives--;
+                if(firebeams[i].flag){
+                    lives--;
+                    firebeams[i].flag = false;
+                    usleep(90000);
+                    player.position.x += 5.0f;
+                }
             }
                 
         }
