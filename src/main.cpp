@@ -205,14 +205,29 @@ void tick_elements() {
     if(!player.safe){
         for(int i =0; i < firelines.size(); i++){
             bounding_box_t field;
-            field.x = firelines[i].position.x-1.2f;
-            field.y = firelines[i].position.y+0.5f;
-            field.width = 5.0f;
+            field.x = firelines[i].position.x-1.3f;
+            field.y = firelines[i].position.y+0.4f;
+            field.width = 4.0f;
             field.height = 5.0f;
             if(detect_collision(a,field)){
                 cout<<field.y<<" aaj mai krke aaya "<<rand()<<endl;
                 firelines[i].detect_collision(a);
             }
+            for(int j = 0; j < balloons.size(); j++)
+            {
+                bounding_box_t ba;
+                ba.x = balloons[j].position.x - 0.4f;
+                ba.y = balloons[j].position.y - 0.4f;
+                ba.height = 0.4f;
+                ba.width = 0.4f;
+                if(detect_collision(field,ba) && firelines[i].detect_collision(ba)){
+                    firelines.erase(firelines.begin()+i);
+                    balloons.erase(balloons.begin()+j);                
+                    break;
+                }
+
+            }
+            
         } 
         for(int i = 0 ; i < mag.size() ; i++){
             mag[i].tick(&player);
@@ -230,23 +245,23 @@ void tick_elements() {
                 balloons.erase(balloons.begin()+i);
                 break;
             }
-            for(int j = 0 ; j < firelines.size() ; j++){
-                bounding_box_t field;
-                field.x = firelines[j].position.x-1.3f;
-                field.y = firelines[j].position.y+0.4f;
-                field.width = 5.0f;
-                field.height = 5.0f;
-                bounding_box_t ba;
-                ba.x = balloons[i].position.x - 0.4f;
-                ba.y = balloons[i].position.y - 0.4f;
-                ba.height = 0.4f;
-                ba.width = 0.4f; 
-                if(detect_collision(field,ba) && firelines[j].detect_collision(ba)){
-                    firelines.erase(firelines.begin()+j);
-                    balloons.erase(balloons.begin()+i);                
-                    break;
-                }
-            }
+            // for(int j = 0 ; j < firelines.size() ; j++){
+            //     bounding_box_t field;
+            //     field.x = firelines[j].position.x-1.3f;
+            //     field.y = firelines[j].position.y+0.4f;
+            //     field.width = 5.0f;
+            //     field.height = 5.0f;
+                // bounding_box_t ba;
+                // ba.x = balloons[i].position.x - 0.4f;
+                // ba.y = balloons[i].position.y - 0.4f;
+                // ba.height = 0.4f;
+                // ba.width = 0.4f; 
+                // if(detect_collision(field,ba) && firelines[j].detect_collision(ba)){
+                //     firelines.erase(firelines.begin()+j);
+                //     balloons.erase(balloons.begin()+i);                
+                //     break;
+                // }
+            // }
         }
         for(int i =0; i < boomerang.size(); i++){
             boomerang[i].tick();
