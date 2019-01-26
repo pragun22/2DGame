@@ -201,18 +201,23 @@ void tick_elements() {
             balloons.erase(balloons.begin()+i);
             break;
         }
-        // for(int i = 0 ; i < firelines.size() ; i++){
-        //     bounding_box_t b;
-        //     b.x = balloons[i].position.x - 0.4f;
-        //     b.y = balloons[i].position.y - 0.4f;
-        //     b.height = 0.8f;
-        //     b.width = 0.8f; 
-        //     if(firelines[i].detect_collision(b)){
-        //         firelines.erase(firelines.begin()+i);
-        //          balloons.erase(balloons.begin()+i);                
-        //         break;
-        //     }
-        // }
+        for(int j = 0 ; j < firelines.size() ; j++){
+            bounding_box_t field;
+            field.x = firelines[j].position.x-1.5f;
+            field.y = firelines[j].position.y+0.3f;
+            field.width = 5.0f;
+            field.height = 5.0f;
+            bounding_box_t ba;
+            ba.x = balloons[i].position.x - 0.4f;
+            ba.y = balloons[i].position.y - 0.4f;
+            ba.height = 0.8f;
+            ba.width = 0.8f; 
+            if(detect_collision(field,ba) && firelines[j].detect_collision(ba)){
+                firelines.erase(firelines.begin()+j);
+                 balloons.erase(balloons.begin()+i);                
+                break;
+            }
+        }
     }
     for(int i =0; i < boomerang.size(); i++){
         boomerang[i].tick();
