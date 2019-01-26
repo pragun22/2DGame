@@ -434,9 +434,9 @@ void reset_screen() {
     float left   = screen_center_x - 4 / screen_zoom;
     float right  = screen_center_x + 4 / screen_zoom;
     if(player.position.x < screen_center_x - 2.0f && !player.safe) player.position.x = screen_center_x - 2.0f;
+    else screen_center_x = player.position.x + 2.0f;
     if(player.position.x > screen_center_x + 1.0f && !player.safe) player.position.x = screen_center_x + 1.0f;
-    if(player.position.x < screen_center_x - 2.0f && player.safe) screen_center_x = screen_center_x - 1.0f;
-    if(player.position.x > screen_center_x + 1.0f && player.safe) screen_center_x = screen_center_x + 0.24f;
+    else screen_center_x = player.position.x - 1.0f;
     // if(player.yspeed==0){ 
     //     player.position.y = bottom+2;
     // }
