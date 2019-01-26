@@ -176,8 +176,8 @@ void tick_elements() {
     a.height = 2.4f;
     for(int i =0; i < firelines.size(); i++){
         bounding_box_t field;
-        field.x = firelines[i].position.x-1.5f;
-        field.y = firelines[i].position.y+0.3f;
+        field.x = firelines[i].position.x-1.2f;
+        field.y = firelines[i].position.y+0.5f;
         field.width = 5.0f;
         field.height = 5.0f;
         if(detect_collision(a,field)){
