@@ -1,4 +1,5 @@
 #include "tunnel.h"
+#include "main.h"
 Tunnel::Tunnel(float x, float y) {
     this->position = glm::vec3(x, y, 0);
     this->rotation = 0.0f;
@@ -62,7 +63,7 @@ void Tunnel::tick(Player* hooman){
     if(hooman->safe){
         if(this->rot > 0.0f) this->rot -= 1.0f;
         hooman->position.x = this->position.x + 8.5f*cos((float) (this->rot * M_PI / 180.0f));
-        if(this->rot > 90.0f) hooman->position.y = this->position.y + 8.5f*sin((float) (this->rot * M_PI / 180.0f));
-        else hooman->position.y = this->position.y - 8.5f*sin((float) (this->rot * M_PI / 180.0f));
+        std::cout<<hooman->position.x<<std::endl;
+        hooman->position.y = this->position.y + 8.5f*sin((float) (this->rot * M_PI / 180.0f));
     }
 }
