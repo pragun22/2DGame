@@ -226,10 +226,10 @@ void tick_elements() {
     live_tick(lives);
     player.tick();
     tunnel.tick(&player);
-    if(player.safe){
+    if(player.sword){
         clock_t temp = clock();
         int timer = (int)(temp - safe)/CLOCKS_PER_SEC;
-        if(timer > 6) player.safe = false;
+        if(timer > 6) player.sword = false;
     }
     bounding_box_t a;
     a.x = player.position.x;
@@ -352,10 +352,10 @@ void tick_elements() {
                     if(player.sword == false ) lives--;
                     else firelines.erase(firelines.begin()+i);
                 }
-                if(player.sword){
-                    firelines[i].position.x += run_x;
-                    firelines[i].position.y -= run_y;
-                }
+            }
+            if(player.sword){
+                firelines[i].position.x += run_x;
+                firelines[i].position.y -= run_y;
             }
             for(int j = 0; j < balloons.size(); j++)
             {
@@ -404,8 +404,8 @@ void tick_elements() {
                 player.position.x += 5.0f;
             }
             if(player.sword){
-                    boomerang[i].position.x += run_x;
-                    boomerang[i].position.y -= run_y;
+                    boomerang[i].position.x += 3*run_x;
+                    boomerang[i].position.y -= 3*run_y;
             }
         } 
         for(int i = 0; i < firebeams.size(); i++){
