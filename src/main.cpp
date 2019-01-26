@@ -183,7 +183,10 @@ void tick_elements() {
     tun.x = tunnel.position.x - 9.0f;
     tun.height = 1.0f;
     tun.width = 2.0f;
-    if(detect_collision(a,tun)) cout<<"tunnel ke andat"<<endl,player.safe = true;
+    if(detect_collision(a,tun)){
+        cout<<tun.x<<"-"<<a.x<<" "<<tun.y<<" "<<endl;
+        player.safe = true;
+    } 
     if(!player.safe){
         for(int i =0; i < firelines.size(); i++){
             bounding_box_t field;

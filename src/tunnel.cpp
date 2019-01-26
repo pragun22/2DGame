@@ -59,8 +59,10 @@ void Tunnel::draw(glm::mat4 VP) {
 }
 
 void Tunnel::tick(Player* hooman){
-    if(this->rot > 0.0f) this->rot -= 1.0f;
-    
-    hooman->position.x = this->position.x + 9.0f*cos((float) (this->rot * M_PI / 180.0f));
-    hooman->position.y = this->position.y + 9.0f*sin((float) (this->rot * M_PI / 180.0f));
+    if(hooman->safe){
+        if(this->rot > 0.0f) this->rot -= 1.0f;
+        hooman->position.x = this->position.x + 8.5f*cos((float) (this->rot * M_PI / 180.0f));
+        if(this->rot > 90.0f) hooman->position.y = this->position.y + 8.5f*sin((float) (this->rot * M_PI / 180.0f));
+        else hooman->position.y = this->position.y - 8.5f*sin((float) (this->rot * M_PI / 180.0f));
+    }
 }
