@@ -5,6 +5,7 @@ Ball::Ball(float x, float y, color_t color,float r) {
     this->position = glm::vec3(x, y, 0);
     int n = 400;
     int inc = 1;
+	this->r = r;
 	GLfloat vertex_buffer_data[9*n];
 	for (int i = 0; i < 9*n; i+=9)
 	{

@@ -26,6 +26,7 @@ Player player;
 Dragon dragon;
 Platform platform;
 Tunnel tunnel;
+vector<Zero> zero;
 vector<One> one;
 vector<Two> two;
 vector<Three> three;
@@ -42,7 +43,7 @@ std::vector<CoinsUp> pow_coins;
 std::vector<Balloon> balloons;
 vector<Boomerang> boomerang;
 vector<Magnet> mag;
-float score = 0;
+int score = 0;
 float screen_zoom = 0.5f, screen_center_x = 0, screen_center_y = 0;
 float camera_rotation_angle = 0;
 int pos = 0;
@@ -53,20 +54,23 @@ Timer t60(1.0 / 60);
 /* Render the scene with openGL */
 /* Edit this function according to your assignment */
 void score_tick(float x, int score){
-    float pos = screen_center_x + 4 / screen_zoom - 5.0f;
+    cout<<score<<endl;
+    float pos = screen_center_x + 4 / screen_zoom-1.0f;
     float top    = screen_center_y + 4 / screen_zoom - 1.0f;
+    if(score == 0 ){ if(zero.size()>0) zero.pop_back(); zero.push_back(Zero(pos, top));}
     while(score>0){
         int temp = score % 10;
-        if(temp==1){ if(one.size()>0) one.pop_back(); one.push_back(One(pos, top));}
-        if(temp==2){ if(two.size()>0)two.pop_back();two.push_back(Two(pos, top));}
-        if(temp==3){ if(three.size()>0)three.pop_back();three.push_back(Three(pos, top));}
-        if(temp==4){ if(four.size()>0)four.pop_back();four.push_back(Four(pos, top));}
-        if(temp==5){ if(five.size()>0)five.pop_back();five.push_back(Five(pos, top));}
-        if(temp==6){ if(six.size()>0)six.pop_back();six.push_back(Six(pos, top));}
-        if(temp==7){ if(seven.size()>0)seven.pop_back();seven.push_back(Seven(pos, top));}
-        if(temp==8){ if(eight.size()>0)eight.pop_back();eight.push_back(Eight(pos, top));}
-        if(temp==9){ if(nine.size()>0)nine.pop_back();nine.push_back(Nine(pos, top));}
-        pos += 1.1f;
+        if(temp==0){ zero.push_back(Zero(pos, top));}
+        if(temp==1){ one.push_back(One(pos, top));}
+        if(temp==2){ two.push_back(Two(pos, top));}
+        if(temp==3){ three.push_back(Three(pos, top));}
+        if(temp==4){ four.push_back(Four(pos, top));}
+        if(temp==5){ five.push_back(Five(pos, top));}
+        if(temp==6){ six.push_back(Six(pos, top));}
+        if(temp==7){ seven.push_back(Seven(pos, top));}
+        if(temp==8){ eight.push_back(Eight(pos, top));}
+        if(temp==9){ nine.push_back(Nine(pos, top));}
+        pos -= 1.1f;
         score = score / 10;
     }
 }
@@ -102,6 +106,7 @@ void draw() {
     // Scene render
     // ball1.draw(VP);
     dragon.draw(VP);
+    for(int i = 0; i < zero.size();i++) zero[i].draw(VP);
     for(int i = 0; i < one.size();i++) one[i].draw(VP);
     for(int i = 0; i < two.size();i++) two[i].draw(VP);
     for(int i = 0; i < three.size();i++) three[i].draw(VP);
@@ -111,6 +116,16 @@ void draw() {
     for(int i = 0; i < seven.size();i++) seven[i].draw(VP);
     for(int i = 0; i < eight.size();i++) eight[i].draw(VP);
     for(int i = 0; i < nine.size();i++) nine[i].draw(VP);
+    if(zero.size()>0) zero.clear(); 
+    if(one.size()>0) one.clear(); 
+    if(two.size()>0)two.clear();
+    if(three.size()>0)three.clear();
+    if(four.size()>0)four.clear();
+    if(five.size()>0)five.clear();
+    if(six.size()>0)six.clear();
+    if(seven.size()>0)seven.clear();
+    if(eight.size()>0)eight.clear();
+    if(nine.size()>0)nine.clear();
     for(int i = 0 ; i<firelines.size();i++) firelines[i].draw(VP);
     for(int i = 0 ; i<mag.size();i++) mag[i].draw(VP);
     for(int i = 0 ; i<boomerang.size();i++) boomerang[i].draw(VP);
@@ -168,7 +183,7 @@ void tick_input(GLFWwindow *window) {
 }
 void tick_elements() {
     // screen_center_x += 0.07f;
-    score_tick(player.position.x, 2574);
+    score_tick(player.position.x, score);
     player.tick();
     tunnel.tick(&player);
     for(int i = 0 ; i < speeds.size(); i++) speeds[i].tick();
@@ -290,6 +305,8 @@ void tick_elements() {
         b.width = 0.4;
         b.height = 0.4;
         if(detect_collision(a,b)){
+            if(coins[i].r == 0.2f) score+=1;
+            else score +=5;
             coins.erase(coins.begin()+i);
         }
     }
