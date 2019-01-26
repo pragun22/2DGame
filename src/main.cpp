@@ -161,6 +161,15 @@ void tick_input(GLFWwindow *window) {
     }
     if (up) {
         player.jump();  
+        clock_t sta = clock();
+        double timer = (double)(sta-firet)/CLOCKS_PER_SEC;
+        if(timer>0.1){
+            for(int i = 0 ; i < 5; i++)
+            {
+                fire.push_back(Fire(player.position.x - 0.24f - float(i)/4.0f, player.position.y-(float)i/4,1));
+            }
+            firet = clock();
+        }
     }
     if(zoom_in) {   
         screen_zoom+=0.1f;
@@ -212,7 +221,7 @@ void tick_elements() {
         if(timer>0.2){
             for(int i = 0 ; i < 5; i++)
             {
-                fire.push_back(Fire(dragon.position.x - 7.0f, dragon.position.y+3.0f -(float)i/4));
+                fire.push_back(Fire(dragon.position.x - 7.0f, dragon.position.y+3.0f -(float)i/4,0));
             }
             firet = clock();
         }
@@ -223,13 +232,15 @@ void tick_elements() {
     draco.width = 9.0f;
     draco.height = 5.0f;
     if(detect_collision(draco,a)){
-        player.position.x -= 12.0f;
-        player.position.y = 0.0f;
+        score+=100;
     }
     if(!player.safe){
         for(int i = 0; i < fire.size(); i++){
            float  timer =  fire[i].tick(player.position.y - dragon.position.y);
-           if(timer>1.5f){
+           float limit;
+           if(fire[i].type) limit = 0.4f;
+           else limit = 1.5f;
+           if(timer>limit){
                fire.erase(fire.begin() + i);
                break;
            }
@@ -328,7 +339,6 @@ void tick_elements() {
         pow.width = (0.6f + 0.6f*cos(M_PI/5.0f));
         if(detect_collision(a,pow)){
             speeds.erase(speeds.begin()+i);
-            cout<<"speed up"<<endl;
             break;
         }
     }
@@ -340,7 +350,7 @@ void tick_elements() {
         pow.width = (0.6f + 0.6f*cos(M_PI/5.0f));
         if(detect_collision(a,pow)){
             pow_coins.erase(pow_coins.begin()+i);
-            score += 0.1f;
+            score += 40;
             break;
         }
     }

@@ -27,11 +27,12 @@ private:
 class Fire {
 public:
     Fire() {}
-    Fire(float x, float y);
+    Fire(float x, float y,int type);
     glm::vec3 position;
     float rotation;
     void draw(glm::mat4 VP);
     double speed;
+    int type;
     clock_t start;
     float xthrust;
     float ythrust;

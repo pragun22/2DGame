@@ -113,10 +113,11 @@ void Dragon::tick(){
     this->position.y -= this->fac;
 }
 
-Fire::Fire(float x, float y) {
+Fire::Fire(float x, float y,int type) {
     this->rotation = 15.0f;
     this->position = glm::vec3(x, y, 0);
     this->start = clock();
+    this->type = type;
     const GLfloat vertex_buffer_data[]={
         0.0f, 0.0f, 0.0f,
         1.0f, 1.0f, 0.0f,
@@ -142,7 +143,8 @@ Fire::Fire(float x, float y) {
         -1.1f, -1.0f, 0.0f,
         -2.1f, 0.0f, 0.0f,                
     };
-    this->object = create3DObject(GL_TRIANGLES, 6*3, vertex_buffer_data, COLOR_COIN, GL_FILL);
+    if(this->type==0) this->object = create3DObject(GL_TRIANGLES, 6*3, vertex_buffer_data, COLOR_COIN, GL_FILL);
+    else this->object = create3DObject(GL_TRIANGLES, 6*3, vertex_buffer_data, COLOR_REAL_BLACK, GL_FILL);
 }
 
 void Fire::draw(glm::mat4 VP) {
@@ -161,10 +163,18 @@ void Fire::draw(glm::mat4 VP) {
 float Fire::tick(float a){
     clock_t end = clock();
     float timer = (float)(end-this->start)/CLOCKS_PER_SEC;
-    this->position.y -= 0.21f*timer;
     int r = rand();
-    if(r%2) this->position.x -= 0.13f;
-    else this->position.x += 0.04f;
+    if(this->type==1){
+        if(r%2) this->position.x -= 0.10f* timer;
+        else this->position.x -= 0.20f* timer;
+        if(r%2) this->position.y -= 0.12f* timer;
+        else this->position.y += 0.03f;
+    }
+    else{
+        if(r%2) this->position.x -= 0.13f;
+        else this->position.x += 0.04f;
+        this->position.y -= 0.21f*timer;
+    }
     return timer;
 }
 

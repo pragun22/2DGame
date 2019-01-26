@@ -35,7 +35,16 @@ Player::Player(float x, float y, color_t color,float bottom) {
 
         0, 1, 0, //head starts
         1, 1, 0,
-        0, 1.4f, 0  // head stops
+        0, 1.4f, 0,  // head stops
+        //jet
+        0, 0, 0,
+        0, 1.0f, 0,
+        -0.25f, 0.0f, 0,
+
+        -0.25f, 1.0f, 0,
+        0, 1.0f, 0,
+        -0.25f, 0.0f, 0,
+        //jet ends
     };
     const GLfloat color_buffer[]={
         209.0/256.0, 116.0/256.0, 22.0/256.0,
@@ -60,9 +69,18 @@ Player::Player(float x, float y, color_t color,float bottom) {
 
         81.0/256.0, 65.0/256.0, 13.0/256.0,
         81.0/256.0, 65.0/256.0, 13.0/256.0,
-        81.0/256.0, 65.0/256.0, 13.0/256.0
+        81.0/256.0, 65.0/256.0, 13.0/256.0,
+
+        107.0/256.0, 80.0/256.0, 238.0/256.0,
+        107.0/256.0, 80.0/256.0, 238.0/256.0,
+        107.0/256.0, 80.0/256.0, 238.0/256.0,
+   
+        107.0/256.0, 80.0/256.0, 238.0/256.0,
+        107.0/256.0, 80.0/256.0, 238.0/256.0,
+        107.0/256.0, 80.0/256.0, 238.0/256.0,
+
     };
-    this->object = create3DObject(GL_TRIANGLES, 6*3, vertex_buffer_data, color_buffer, GL_FILL);
+    this->object = create3DObject(GL_TRIANGLES, 8*3, vertex_buffer_data, color_buffer, GL_FILL);
 }
 
 void Player::draw(glm::mat4 VP) {
