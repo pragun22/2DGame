@@ -1,11 +1,12 @@
 #include "tunnel.h"
 Tunnel::Tunnel(float x, float y) {
     this->position = glm::vec3(x, y, 0);
-    this->rotation = -8.0f;
+    this->rotation = 0.0f;
+    this->rot = 180.0f;
     speed = 0.01;
     int n = 50;
-    int inc = 1;
-    float r = 4.0f ;
+    int inc = 0;
+    float r = 9.0f ;
     GLfloat vertex_buffer_data[9*n/2];
     GLfloat vertex_buffer_data1[9*n/2];
 	for (int i = 0; i < 9*n/2; i+=9)
@@ -23,7 +24,7 @@ Tunnel::Tunnel(float x, float y) {
 		vertex_buffer_data[i+8]=0;
 		inc++;
 	}
-    inc = 1;
+    inc = 0;
     for (int i = 0; i < 9*n/2; i+=9)
 	{
 		float angle = 2*M_PI*inc/n;
@@ -57,11 +58,9 @@ void Tunnel::draw(glm::mat4 VP) {
 
 }
 
-// void Tunnel::tick(){
-//     // std::cout<<this->xthrust<<std::endl;
-//     this->position.x += this->xspeed;
-//     this->position.y += this->yspeed;
-//     // if(this->yspeed!=0.0f){
-//         this->yspeed += -1*0.006f;
-//     // }
-// }
+void Tunnel::tick(Player* hooman){
+    if(this->rot > 0.0f) this->rot -= 1.0f;
+    
+    hooman->position.x = this->position.x + 9.0f*cos((float) (this->rot * M_PI / 180.0f));
+    hooman->position.y = this->position.y + 9.0f*sin((float) (this->rot * M_PI / 180.0f));
+}

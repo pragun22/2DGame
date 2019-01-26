@@ -170,6 +170,7 @@ void tick_elements() {
     // screen_center_x += 0.07f;
     score_tick(player.position.x, 2574);
     player.tick();
+    tunnel.tick(&player);
     for(int i = 0 ; i < speeds.size(); i++) speeds[i].tick();
     for(int i = 0 ; i < pow_coins.size(); i++) pow_coins[i].tick();
     bounding_box_t a;
@@ -177,62 +178,84 @@ void tick_elements() {
     a.y = player.position.y-1.0f;
     a.width = 1.0f;
     a.height = 2.4f;
-    for(int i =0; i < firelines.size(); i++){
-        bounding_box_t field;
-        field.x = firelines[i].position.x-1.2f;
-        field.y = firelines[i].position.y+0.5f;
-        field.width = 5.0f;
-        field.height = 5.0f;
-        if(detect_collision(a,field)){
-            cout<<field.y<<" aaj mai krke aaya "<<rand()<<endl;
-            firelines[i].detect_collision(a);
-        }
-    } 
-    for(int i = 0 ; i < mag.size() ; i++){
-        mag[i].tick(&player);
-    }
-    for(int i = 0; i < balloons.size(); i++){
-        balloons[i].tick();   
-        bounding_box_t fire;
-        fire.x = 0.2f*4 + firebeams[0].position.x;
-        fire.y = firebeams[0].position.y - 0.4f*0.9;
-        fire.width = 3.0f*4;
-        fire.height = 0.8f*0.9;
-        if(balloons[i].detect_collision(fire) && firebeams[0].flag){ 
-            firebeams[0].flag = false;
-            firebeams[0].reset();
-            balloons.erase(balloons.begin()+i);
-            break;
-        }
-        for(int j = 0 ; j < firelines.size() ; j++){
+    bounding_box_t tun;
+    tun.y = tunnel.position.y;
+    tun.x = tunnel.position.x - 9.0f;
+    tun.height = 1.0f;
+    tun.width = 2.0f;
+    if(detect_collision(a,tun)) cout<<"tunnel ke andat"<<endl,player.safe = true;
+    if(!player.safe){
+        for(int i =0; i < firelines.size(); i++){
             bounding_box_t field;
-            field.x = firelines[j].position.x-1.3f;
-            field.y = firelines[j].position.y+0.4f;
+            field.x = firelines[i].position.x-1.2f;
+            field.y = firelines[i].position.y+0.5f;
             field.width = 5.0f;
             field.height = 5.0f;
-            bounding_box_t ba;
-            ba.x = balloons[i].position.x - 0.4f;
-            ba.y = balloons[i].position.y - 0.4f;
-            ba.height = 0.4f;
-            ba.width = 0.4f; 
-            if(detect_collision(field,ba) && firelines[j].detect_collision(ba)){
-                firelines.erase(firelines.begin()+j);
-                 balloons.erase(balloons.begin()+i);                
+            if(detect_collision(a,field)){
+                cout<<field.y<<" aaj mai krke aaya "<<rand()<<endl;
+                firelines[i].detect_collision(a);
+            }
+        } 
+        for(int i = 0 ; i < mag.size() ; i++){
+            mag[i].tick(&player);
+        }
+        for(int i = 0; i < balloons.size(); i++){
+            balloons[i].tick();   
+            bounding_box_t fire;
+            fire.x = 0.2f*4 + firebeams[0].position.x;
+            fire.y = firebeams[0].position.y - 0.4f*0.9;
+            fire.width = 3.0f*4;
+            fire.height = 0.8f*0.9;
+            if(balloons[i].detect_collision(fire) && firebeams[0].flag){ 
+                firebeams[0].flag = false;
+                firebeams[0].reset();
+                balloons.erase(balloons.begin()+i);
                 break;
             }
+            for(int j = 0 ; j < firelines.size() ; j++){
+                bounding_box_t field;
+                field.x = firelines[j].position.x-1.3f;
+                field.y = firelines[j].position.y+0.4f;
+                field.width = 5.0f;
+                field.height = 5.0f;
+                bounding_box_t ba;
+                ba.x = balloons[i].position.x - 0.4f;
+                ba.y = balloons[i].position.y - 0.4f;
+                ba.height = 0.4f;
+                ba.width = 0.4f; 
+                if(detect_collision(field,ba) && firelines[j].detect_collision(ba)){
+                    firelines.erase(firelines.begin()+j);
+                    balloons.erase(balloons.begin()+i);                
+                    break;
+                }
+            }
+        }
+        for(int i =0; i < boomerang.size(); i++){
+            boomerang[i].tick();
+            bounding_box_t boomer;
+            boomer.x = -0.5f + boomerang[i].position.x;
+            boomer.y = -0.5f + boomerang[i].position.y;
+            boomer.width = 1.0f;
+            boomer.height = 0.5f;
+            if(detect_collision(boomer, a)){
+                cout<<"laga laga kaata laga"<<endl;
+            }
+        } 
+        for(int i = 0; i < firebeams.size(); i++){
+            if(firebeams[i].flag) firebeams[i].tick(&player);
+            else firebeams[i].reset();
+            bounding_box_t fire;
+            fire.x = 0.2f*3.5 + firebeams[i].position.x;
+            fire.y = firebeams[i].position.y - 0.4f*0.7;
+            fire.width = 3.0f*3.5;
+            fire.height = 0.8f*0.7;
+            if(detect_collision(a,fire)){
+                
+                if(firebeams[i].flag) std::cout<<"kat gaya "<<rand()<<std::endl;
+            }
+                
         }
     }
-    for(int i =0; i < boomerang.size(); i++){
-        boomerang[i].tick();
-        bounding_box_t boomer;
-        boomer.x = -0.5f + boomerang[i].position.x;
-        boomer.y = -0.5f + boomerang[i].position.y;
-        boomer.width = 1.0f;
-        boomer.height = 0.5f;
-        if(detect_collision(boomer, a)){
-            cout<<"laga laga kaata laga"<<endl;
-        }
-    } 
     for(int i = 0 ; i< speeds.size();i++){
         bounding_box_t pow;
         pow.x = speeds[i].position.x - 0.6f*cos(M_PI/5.0f);
@@ -257,20 +280,6 @@ void tick_elements() {
             break;
         }
     }
-    for(int i = 0; i < firebeams.size(); i++){
-        if(firebeams[i].flag) firebeams[i].tick(&player);
-        else firebeams[i].reset();
-        bounding_box_t fire;
-        fire.x = 0.2f*3.5 + firebeams[i].position.x;
-        fire.y = firebeams[i].position.y - 0.4f*0.7;
-        fire.width = 3.0f*3.5;
-        fire.height = 0.8f*0.7;
-        if(detect_collision(a,fire)){
-            
-            if(firebeams[i].flag) std::cout<<"kat gaya "<<rand()<<std::endl;
-        }
-            
-    }
     for(int i = 0; i<coins.size();i++){
         bounding_box_t b;
         b.x = coins[i].position.x-0.2f;
@@ -292,7 +301,7 @@ void initGL(GLFWwindow *window, int width, int height) {
     bond = clock();
     player = Player(-3.0f, bottom+2.0f, COLOR_BLACK,bottom);
     dragon = Dragon(4.0f,2.0f);
-    tunnel = Tunnel(2.0f,-1.0f);
+    tunnel = Tunnel(22.0f,-1.0f);
     platform = Platform(-30.0f, bottom , 1);
     speeds.push_back(SpeedUp(5.0f, 3.0f, bottom));
     pow_coins.push_back(CoinsUp(10.0f, 0.0f, bottom));

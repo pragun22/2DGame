@@ -9,6 +9,7 @@ Player::Player(float x, float y, color_t color,float bottom) {
     this->gravity = 0.01f;
     speed = 0.01;
     this->yspeed = 0;
+    this->safe = false;
     int n = 400;
     int inc = 1;
     const GLfloat vertex_buffer_data[]={
@@ -84,6 +85,9 @@ void Player::jump(){
 }
 void Player::move(int l,float fact)
 {
+    if(this->safe){
+        return;
+    }
     float factor = 1.0f;
     if(this->position.y!=(this->miny+2.0f)) factor = 2.0f;
     if(l) this->xspeed = factor*0.075f*fact;
@@ -91,6 +95,7 @@ void Player::move(int l,float fact)
 }
 
 void Player::tick(){
+    if(this->safe) return;
     this->position.x +=this->xspeed;
     this->position.y += this->yspeed;
     if(this->position.y<this->miny){

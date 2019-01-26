@@ -12,8 +12,7 @@ public:
     float rotation;
     float friction;
     float gravity;
-    float yspeed;
-    float xspeed;
+    float rot;
     void draw(glm::mat4 VP);
     void tick(Player* hooman);
     void set_position(float x, float y);

@@ -15,6 +15,7 @@ public:
     float gravity;
     float yspeed;
     float xspeed;
+    bool safe;
     void draw(glm::mat4 VP);
     void set_position(float x, float y);
     void jump();
