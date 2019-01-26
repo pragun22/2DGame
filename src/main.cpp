@@ -36,6 +36,7 @@ vector<Six> six;
 vector<Seven> seven;
 vector<Eight> eight;
 vector<Nine> nine;
+vector<Fire> fire;
 std::vector<SpeedUp> speeds;
 std::vector<Firelines> firelines;
 std::vector<Firebeams> firebeams;
@@ -49,6 +50,7 @@ float camera_rotation_angle = 0;
 int pos = 0;
 double acc = 0.0;
 clock_t bond;
+clock_t firet;
 Timer t60(1.0 / 60);
 
 /* Render the scene with openGL */
@@ -106,6 +108,7 @@ void draw() {
     // Scene render
     // ball1.draw(VP);
     dragon.draw(VP);
+    dragon.tick();
     for(int i = 0; i < zero.size();i++) zero[i].draw(VP);
     for(int i = 0; i < one.size();i++) one[i].draw(VP);
     for(int i = 0; i < two.size();i++) two[i].draw(VP);
@@ -127,6 +130,7 @@ void draw() {
     if(eight.size()>0)eight.clear();
     if(nine.size()>0)nine.clear();
     for(int i = 0 ; i<firelines.size();i++) firelines[i].draw(VP);
+    for(int i = 0 ; i<fire.size();i++) fire[i].draw(VP);
     for(int i = 0 ; i<mag.size();i++) mag[i].draw(VP);
     for(int i = 0 ; i<boomerang.size();i++) boomerang[i].draw(VP);
     for(int i = 0 ; i<firebeams.size();i++) if(firebeams[i].flag) firebeams[i].draw(VP);
@@ -202,7 +206,34 @@ void tick_elements() {
         cout<<tun.x<<"-"<<a.x<<" "<<tun.y<<" "<<endl;
         player.safe = true;
     } 
+    if(dragon.position.x - player.position.x < 13.0f){
+        clock_t sta = clock();
+        double timer = (double)(sta-firet)/CLOCKS_PER_SEC;
+        if(timer>0.2){
+            for(int i = 0 ; i < 5; i++)
+            {
+                fire.push_back(Fire(dragon.position.x - 7.0f, dragon.position.y+3.0f -(float)i/4));
+            }
+            firet = clock();
+        }
+    }
+    bounding_box_t draco;
+    draco.x = dragon.position.x - 7.0f;
+    draco.y = dragon.position.y - 1.25f;
+    draco.width = 9.0f;
+    draco.height = 5.0f;
+    if(detect_collision(draco,a)){
+        player.position.x -= 12.0f;
+        player.position.y = 0.0f;
+    }
     if(!player.safe){
+        for(int i = 0; i < fire.size(); i++){
+           float  timer =  fire[i].tick(player.position.y - dragon.position.y);
+           if(timer>1.5f){
+               fire.erase(fire.begin() + i);
+               break;
+           }
+        }
         for(int i =0; i < firelines.size(); i++){
             bounding_box_t field;
             field.x = firelines[i].position.x-1.3f;
@@ -334,6 +365,7 @@ void initGL(GLFWwindow *window, int width, int height) {
 
     float bottom = screen_center_y - 4.0f / screen_zoom;
     bond = clock();
+    firet = clock();
     player = Player(-3.0f, bottom+2.0f, COLOR_BLACK,bottom);
     dragon = Dragon(4.0f,2.0f);
     tunnel = Tunnel(22.0f,-1.0f);
@@ -427,6 +459,14 @@ int main(int argc, char **argv) {
             int random1 = rand()%1232;
             int random2 = rand()%1232;
             // if(true){   
+            draw();
+            // Swap Frame Buffer in double buffering
+            glfwSwapBuffers(window);
+
+            score += float(1*float(1/60));
+            tick_input(window);
+            tick_elements();
+            reset_screen();
             if(abs(random1 - random2)==0){
                 for(int i = 0 ; i < firebeams.size() ; i++){
                     
@@ -436,14 +476,6 @@ int main(int argc, char **argv) {
                     }
                 }
             }
-            draw();
-            // Swap Frame Buffer in double buffering
-            glfwSwapBuffers(window);
-
-            score += float(1*float(1/60));
-            tick_input(window);
-            tick_elements();
-            reset_screen();
 
         }
         // Poll for Keyboard and mouse events
