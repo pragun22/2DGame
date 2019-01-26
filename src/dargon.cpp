@@ -76,9 +76,18 @@ Dragon::Dragon(float x, float y) {
     6.0f, 3.0f, 0.0f,
     7.0f, 2.0f, 0.0f,
 
+    //wing
+    0.0, 0.0, 0,
+    3.0f, -0.5f, 0,
+    4.0f, 6.0f, 0,
+
+    0.0f, 1.0f, 0,
+    3.0f, 1.5f, 0,
+    3.0f, 6.0f, 0
+
 
     };
-    this->object = create3DObject(GL_TRIANGLES, 6*3, vertex_buffer_data, color_buffer, GL_FILL);
+    this->object = create3DObject(GL_TRIANGLES, 18*3, vertex_buffer_data, COLOR_BLACK, GL_FILL);
 }
 
 void Dragon::draw(glm::mat4 VP) {
