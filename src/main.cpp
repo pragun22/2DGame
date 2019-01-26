@@ -10,6 +10,7 @@
 #include "platform.h"
 #include "score.h"
 #include "tunnel.h"
+#include <unistd.h>
 using namespace std;
 
 GLMatrices Matrices;
@@ -51,12 +52,12 @@ int pos = 0;
 double acc = 0.0;
 clock_t bond;
 clock_t firet;
+int lives = 5;
 Timer t60(1.0 / 60);
 
 /* Render the scene with openGL */
 /* Edit this function according to your assignment */
 void score_tick(float x, int score){
-    cout<<score<<endl;
     float pos = screen_center_x + 4 / screen_zoom-1.0f;
     float top    = screen_center_y + 4 / screen_zoom - 1.0f;
     if(score == 0 ){ if(zero.size()>0) zero.pop_back(); zero.push_back(Zero(pos, top));}
@@ -74,6 +75,26 @@ void score_tick(float x, int score){
         if(temp==9){ nine.push_back(Nine(pos, top));}
         pos -= 1.1f;
         score = score / 10;
+    }
+}
+void live_tick(int live){
+    float pos = screen_center_x - 4 / screen_zoom-1.0f;
+    float top    = screen_center_y + 4 / screen_zoom - 1.0f;
+    if(live == 0 ){ if(zero.size()>0) zero.pop_back(); zero.push_back(Zero(pos+2.0f, top));}
+    while(live>0){
+        int temp = live % 10;
+        if(temp==0){ zero.push_back(Zero(pos+2.0f, top));}
+        if(temp==1){ one.push_back(One(pos+2.0f, top));}
+        if(temp==2){ two.push_back(Two(pos+2.0f, top));}
+        if(temp==3){ three.push_back(Three(pos+2.0f, top));}
+        if(temp==4){ four.push_back(Four(pos+2.0f, top));}
+        if(temp==5){ five.push_back(Five(pos+2.0f, top));}
+        if(temp==6){ six.push_back(Six(pos+2.0f, top));}
+        if(temp==7){ seven.push_back(Seven(pos+2.0f, top));}
+        if(temp==8){ eight.push_back(Eight(pos+2.0f, top));}
+        if(temp==9){ nine.push_back(Nine(pos+2.0f, top));}
+        pos -= 1.1f;
+        live = live / 10;
     }
 }
 void draw() {
@@ -164,9 +185,9 @@ void tick_input(GLFWwindow *window) {
         clock_t sta = clock();
         double timer = (double)(sta-firet)/CLOCKS_PER_SEC;
         if(timer>0.1){
-            for(int i = 0 ; i < 5; i++)
+            for(int i = 0 ; i < 3; i++)
             {
-                fire.push_back(Fire(player.position.x - 0.24f - float(i)/4.0f, player.position.y-(float)i/4,1));
+                fire.push_back(Fire(player.position.x - 0.14f - float(i)/4.0f, player.position.y-(float)i/4,1));
             }
             firet = clock();
         }
@@ -197,6 +218,7 @@ void tick_input(GLFWwindow *window) {
 void tick_elements() {
     // screen_center_x += 0.07f;
     score_tick(player.position.x, score);
+    live_tick(lives);
     player.tick();
     tunnel.tick(&player);
     for(int i = 0 ; i < speeds.size(); i++) speeds[i].tick();
@@ -232,7 +254,7 @@ void tick_elements() {
     draco.width = 9.0f;
     draco.height = 5.0f;
     if(detect_collision(draco,a)){
-        score+=100;
+        score+=1682300;
     }
     if(!player.safe){
         for(int i = 0; i < fire.size(); i++){
@@ -313,7 +335,9 @@ void tick_elements() {
             boomer.width = 1.0f;
             boomer.height = 0.5f;
             if(detect_collision(boomer, a)){
-                cout<<"laga laga kaata laga"<<endl;
+                lives--;
+                player.position.x += 15.0f;
+                usleep(1000000);
             }
         } 
         for(int i = 0; i < firebeams.size(); i++){
@@ -326,7 +350,7 @@ void tick_elements() {
             fire.height = 0.8f*0.7;
             if(detect_collision(a,fire)){
                 
-                if(firebeams[i].flag) std::cout<<"kat gaya "<<rand()<<std::endl;
+                if(firebeams[i].flag) lives--;
             }
                 
         }
@@ -339,6 +363,7 @@ void tick_elements() {
         pow.width = (0.6f + 0.6f*cos(M_PI/5.0f));
         if(detect_collision(a,pow)){
             speeds.erase(speeds.begin()+i);
+            lives+=1;
             break;
         }
     }
@@ -459,11 +484,11 @@ int main(int argc, char **argv) {
     clock_t start = clock();
     while (!glfwWindowShouldClose(window)) {
         // Process timers
-
         if (t60.processTick()) {
             // std::cout<<"tick"<<std::endl;
             // 60 fps
             // OpenGL Draw commands
+            if(lives==0) exit(0);
             clock_t end = clock();
             int timer = ((int) (end - start)) / CLOCKS_PER_SEC;
             int random1 = rand()%1232;
