@@ -9,6 +9,7 @@
 #include "enemies.h"
 #include "platform.h"
 #include "score.h"
+#include "tunnel.h"
 using namespace std;
 
 GLMatrices Matrices;
@@ -24,6 +25,7 @@ set<int> del_coins;
 Player player;
 Dragon dragon;
 Platform platform;
+Tunnel tunnel;
 vector<One> one;
 vector<Two> two;
 vector<Three> three;
@@ -100,8 +102,6 @@ void draw() {
     // Scene render
     // ball1.draw(VP);
     dragon.draw(VP);
-    player.draw(VP);
-    platform.draw(VP);
     for(int i = 0; i < one.size();i++) one[i].draw(VP);
     for(int i = 0; i < two.size();i++) two[i].draw(VP);
     for(int i = 0; i < three.size();i++) three[i].draw(VP);
@@ -119,6 +119,9 @@ void draw() {
     for(int i = 0; i < speeds.size() ; i++) speeds[i].draw(VP);
     for(int i = 0; i < pow_coins.size() ; i++) pow_coins[i].draw(VP);
     for(int i = 0; i < coins.size(); i++) coins[i].draw(VP);
+    tunnel.draw(VP);
+    player.draw(VP);
+    platform.draw(VP);
 
 }
 
@@ -289,6 +292,7 @@ void initGL(GLFWwindow *window, int width, int height) {
     bond = clock();
     player = Player(-3.0f, bottom+2.0f, COLOR_BLACK,bottom);
     dragon = Dragon(4.0f,2.0f);
+    tunnel = Tunnel(2.0f,-1.0f);
     platform = Platform(-30.0f, bottom , 1);
     speeds.push_back(SpeedUp(5.0f, 3.0f, bottom));
     pow_coins.push_back(CoinsUp(10.0f, 0.0f, bottom));

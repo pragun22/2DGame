@@ -21,6 +21,7 @@ public:
     double speed;
 private:
     VAO *object;
+    VAO *object1;
 };
 
 #endif // MAGNET_H
