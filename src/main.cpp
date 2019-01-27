@@ -362,6 +362,7 @@ void tick_elements() {
         wid.width = 1.85f;
         if(detect_collision(a,tall) || detect_collision(a,wid)){
             //cout<<"ab  ye krke dikhao"<<endl;
+            sword.erase(sword.begin()+i);
             player.sword = true;
             safe = clock();
         }
@@ -497,13 +498,6 @@ void initGL(GLFWwindow *window, int width, int height) {
     dragon = Dragon(240.0f,2.0f);
     tunnel = Tunnel(140.0f,-1.0f);
     firebeams.push_back(Firebeams(6, 6));
-    // for(int i = 0 ; i < 15 ; i++){
-    //     float x = 15 + ((float)i/1.5f)*21.2f;
-    //     firelines.push_back(Firelines(x,2));
-    // }
-    // Create and compile our GLSL program from the shaders
-    //fonts work
-    //fonts work ends here
     programID = LoadShaders("Sample_GL.vert", "Sample_GL.frag");
     // Get a handle for our "MVP" uniform
     Matrices.MatrixID = glGetUniformLocation(programID, "MVP");
@@ -586,12 +580,17 @@ int main(int argc, char **argv) {
                 float pos = player.position.x + 25.0f;
                 boomerang.push_back(Boomerang(2.0f,2.0f, pos, 0.0f));
             }
-            if(random1%998<2){
+            if(random1%998<5 && sword.size()<6){
                 float bottom = screen_center_y - 4 / screen_zoom;
-                float pos = player.position.x + 35.0f;
+                float pos = player.position.x;
                 speeds.push_back(SpeedUp(pos + 56.0f, 3.0f, bottom));
                 pow_coins.push_back(CoinsUp(pos+25.0f, 0.0f, bottom));
                 sword.push_back(Sword(pos+40.0f,2,bottom));  
+            }
+            if(abs(random1 - random2) < 5){
+                float pos = player.position.x + 35.0f;
+                firelines.push_back(Firelines(pos,4));
+                firelines.push_back(Firelines(pos+8,2));
             }
         }
         // Poll for Keyboard and mouse events
