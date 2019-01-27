@@ -580,17 +580,17 @@ int main(int argc, char **argv) {
                 float pos = player.position.x + 25.0f;
                 boomerang.push_back(Boomerang(2.0f,2.0f, pos, 0.0f));
             }
-            if(random1%998<5 && sword.size()<6){
+            if(random1%998<4 && pow_coins.size()<3){
                 float bottom = screen_center_y - 4 / screen_zoom;
                 float pos = player.position.x;
                 speeds.push_back(SpeedUp(pos + 56.0f, 3.0f, bottom));
                 pow_coins.push_back(CoinsUp(pos+25.0f, 0.0f, bottom));
                 sword.push_back(Sword(pos+40.0f,2,bottom));  
             }
-            if(abs(random1 - random2) < 5){
+            if(abs(random1 - random2) < 2){
                 float pos = player.position.x + 35.0f;
-                firelines.push_back(Firelines(pos,4));
-                firelines.push_back(Firelines(pos+8,2));
+                firelines.push_back(Firelines(pos,1.0f+rand()%4));
+                firelines.push_back(Firelines(pos+8,-2.0f+rand()%5));
             }
         }
         // Poll for Keyboard and mouse events
