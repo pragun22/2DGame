@@ -7,6 +7,7 @@ Player::Player(float x, float y, color_t color,float bottom) {
     this->friction = 0.95f;
     this->miny = bottom+2.0f;
     this->gravity = 0.01f;
+    this->magnet = false;
     speed = 0.01;
     this->yspeed = 0;
     this->safe = false;
@@ -199,4 +200,5 @@ void Player::tick(){
         this->xspeed += 0.010f;
         if(this->xspeed>0) this->xspeed = 0.0f;
     }
+    
 }

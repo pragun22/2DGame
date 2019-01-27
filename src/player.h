@@ -17,6 +17,7 @@ public:
     float xspeed;
     bool safe;
     bool sword;
+    bool magnet;
     void draw(glm::mat4 VP);
     void set_position(float x, float y);
     void jump();

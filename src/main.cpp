@@ -164,7 +164,7 @@ void draw() {
     for(int i = 0; i < pow_coins.size() ; i++) pow_coins[i].draw(VP);
     for(int i = 0; i < coins.size(); i++) coins[i].draw(VP);
     for(int i = 0; i < sword.size(); i++) sword[i].draw(VP);
-    // tunnel.draw(VP);
+    tunnel.draw(VP);
     player.draw(VP);
     platform.draw(VP);
 
@@ -225,7 +225,7 @@ void tick_elements() {
     score_tick(player.position.x, score);
     live_tick(lives);
     player.tick();
-    // tunnel.tick(&player);
+    tunnel.tick(&player);
     if(player.sword){
         clock_t temp = clock();
         int timer = (int)(temp - safe)/CLOCKS_PER_SEC;
@@ -278,6 +278,7 @@ void tick_elements() {
         pow.width = (0.6f + 0.6f*cos(M_PI/5.0f));
         if(detect_collision(a,pow)){
             speeds.erase(speeds.begin()+i);
+            player.magnet = true;
             lives+=1;
             break;
         }
@@ -301,6 +302,7 @@ void tick_elements() {
         b.y = coins[i].position.y-0.2f;
         b.width = 0.4;
         b.height = 0.4;
+        coins[i].tick(&player);
         if(detect_collision(a,b)){
             if(coins[i].r == 0.2f) score+=1;
             else score +=5;
@@ -358,7 +360,7 @@ void tick_elements() {
                 if(firelines[i].detect_collision(a)){
                     firelines.erase(firelines.begin()+i);
                     if(!player.sword){
-                        // lives--;
+                        lives--;
                     }
                 }
             }
@@ -448,7 +450,7 @@ void initGL(GLFWwindow *window, int width, int height) {
     firet = clock();
     player = Player(-3.0f, bottom+2.0f, COLOR_BLACK,bottom);
     dragon = Dragon(244.0f,2.0f);
-    // tunnel = Tunnel(22.0f,-1.0f);
+    tunnel = Tunnel(22.0f,-1.0f);
     platform = Platform(-30.0f, bottom , 1);
     speeds.push_back(SpeedUp(5.0f, 3.0f, bottom));
     pow_coins.push_back(CoinsUp(10.0f, 0.0f, bottom));
