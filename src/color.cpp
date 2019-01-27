@@ -15,3 +15,6 @@ const color_t COLOR_BLUE = { 43, 50, 206};
 const color_t COLOR_REAL_BLACK = { 1, 1, 1};
 const color_t COLOR_TUNNEL = { 183, 143, 149};
 const color_t COLOR_POW = { 240, 63, 128};
+color_t COLOR_BACKGROUND1[] = {
+    {0, 38, 51},{218, 57, 153},{179,133,81}
+};

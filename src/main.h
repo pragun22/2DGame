@@ -79,6 +79,7 @@ extern const color_t COLOR_RED;
 extern const color_t COLOR_GREEN;
 extern const color_t COLOR_BLACK;
 extern const color_t COLOR_BACKGROUND;
+extern  color_t COLOR_BACKGROUND1[];
 extern const color_t COLOR_COIN;
 extern const color_t COLOR_COIN1;
 extern const color_t COLOR_COIN2;

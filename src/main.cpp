@@ -512,7 +512,7 @@ void initGL(GLFWwindow *window, int width, int height) {
     reshapeWindow (window, width, height);
 
     // Background color of the scene
-    glClearColor (COLOR_BACKGROUND.r / 256.0, COLOR_BACKGROUND.g / 256.0, COLOR_BACKGROUND.b / 256.0, 0.0f); // R, G, B, A
+    glClearColor ((COLOR_BACKGROUND.r) / 256.0, (COLOR_BACKGROUND.g)/ 256.0, (COLOR_BACKGROUND.b)/ 256.0, 0.0f); // R, G, B, A
     glClearDepth (1.0f);
 
     glEnable (GL_DEPTH_TEST);
@@ -530,6 +530,7 @@ int main(int argc, char **argv) {
     int width  = 600;
     int height = 600;
     window = initGLFW(width, height);
+    int incr = -1;
     initGL (window, width, height);
     /* Draw in loop */
     clock_t start = clock();
@@ -540,6 +541,14 @@ int main(int argc, char **argv) {
             // 60 fps
             // OpenGL Draw commands
             if(lives==0) exit(0);
+            if(int(player.position.x)%300<2){
+                incr++;
+                incr = incr%3;
+                player.position.x += 2.0f;
+                screen_center_x += 2.0f;
+                if(player.position.x < 30.0f) incr = 0;
+            }
+            glClearColor ((COLOR_BACKGROUND1[incr].r) / 256.0, (COLOR_BACKGROUND1[incr].g)/ 256.0, (COLOR_BACKGROUND1[incr].b)/ 256.0, 0.0f); // R, G, B, A
             clock_t end = clock();
             int timer = ((int) (end - start)) / CLOCKS_PER_SEC;
             int random1 = rand()%1232;
