@@ -56,6 +56,7 @@ float run_y = 0.3f;
 clock_t bond;
 clock_t firet;
 clock_t safe;
+clock_t magn;
 int lives = 5;
 Timer t60(1.0 / 60);
 
@@ -222,6 +223,11 @@ void tick_input(GLFWwindow *window) {
 }
 void tick_elements() {
     // screen_center_x += 0.07f;
+    clock_t temp = clock();
+    int magtime = (int)(temp - magn)/CLOCKS_PER_SEC;
+    if(magtime>10){
+        player.magnet = false;
+    }
     score_tick(player.position.x, score);
     live_tick(lives);
     player.tick();
@@ -229,7 +235,7 @@ void tick_elements() {
     if(player.sword){
         clock_t temp = clock();
         int timer = (int)(temp - safe)/CLOCKS_PER_SEC;
-        cout<<timer<<endl;
+        //cout<<timer<<endl;
         if(timer > 6) player.sword = false;
     }
     bounding_box_t a;
@@ -279,6 +285,7 @@ void tick_elements() {
         if(detect_collision(a,pow)){
             speeds.erase(speeds.begin()+i);
             player.magnet = true;
+            magn = clock();
             lives+=1;
             break;
         }
@@ -321,7 +328,7 @@ void tick_elements() {
         wid.height = 0.15f;
         wid.width = 1.85f;
         if(detect_collision(a,tall) || detect_collision(a,wid)){
-            cout<<"ab  ye krke dikhao"<<endl;
+            //cout<<"ab  ye krke dikhao"<<endl;
             player.sword = true;
             safe = clock();
         }
@@ -352,7 +359,7 @@ void tick_elements() {
             field.width = 8.0f;
             field.height = 5.0f;
             if(detect_collision(a,field)){
-                cout<<field.y<<" aaj mai krke aaya "<<rand()<<endl;
+                //cout<<field.y<<" aaj mai krke aaya "<<rand()<<endl;
                 if(player.sword){
                     firelines[i].position.x += run_x;
                     firelines[i].position.y += run_y;
@@ -533,7 +540,7 @@ int main(int argc, char **argv) {
     while (!glfwWindowShouldClose(window)) {
         // Process timers
         if (t60.processTick()) {
-            // std::cout<<"tick"<<std::endl;
+            // std:://cout<<"tick"<<std::endl;
             // 60 fps
             // OpenGL Draw commands
             if(lives==0) exit(0);
