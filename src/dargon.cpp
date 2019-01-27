@@ -88,7 +88,7 @@ Dragon::Dragon(float x, float y) {
     3.0f, 1.5f, 0,
     3.0f, 6.0f, 0
     };
-    this->object = create3DObject(GL_TRIANGLES, 19*3, vertex_buffer_data, COLOR_BLACK, GL_FILL);
+    this->object = create3DObject(GL_TRIANGLES, 19*3, vertex_buffer_data, COLOR_COIN1, GL_FILL);
 }
 
 void Dragon::draw(glm::mat4 VP) {
@@ -143,7 +143,7 @@ Fire::Fire(float x, float y,int type) {
         -1.1f, -1.0f, 0.0f,
         -2.1f, 0.0f, 0.0f,                
     };
-    if(this->type==0) this->object = create3DObject(GL_TRIANGLES, 6*3, vertex_buffer_data, COLOR_COIN, GL_FILL);
+    if(this->type==0) this->object = create3DObject(GL_TRIANGLES, 6*3, vertex_buffer_data, COLOR_ORANGE, GL_FILL);
     else this->object = create3DObject(GL_TRIANGLES, 6*3, vertex_buffer_data, COLOR_SPARKLE, GL_FILL);
 }
 

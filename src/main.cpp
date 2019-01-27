@@ -207,18 +207,30 @@ void tick_input(GLFWwindow *window) {
     //     if(screen_zoom<0.35f) screen_zoom = 0.35f;
     // }
     if(right) {
-        float factor = 1.0f;
-        if(player.position.x >= screen_center_x + 1.0f ) screen_center_x += 0.24f,factor = 2.0f;
-        else screen_center_x += 0.07f ;
-        player.move(1,factor);
-        platform.move();
+        if(player.safe){
+            if(tunnel.rot > 0.0f) tunnel.rot -= 1.0f;
+            else player.safe = false;
+        }
+        else{
+            float factor = 1.0f;
+            if(player.position.x >= screen_center_x + 1.0f ) screen_center_x += 0.24f,factor = 2.0f;
+            else screen_center_x += 0.07f ;
+            player.move(1,factor);
+            platform.move();
+        }
     }
     if(left){
-        float factor = 1.0f;
-        if(player.position.x <= screen_center_x - 2.0f ) screen_center_x -= 0.24f,factor = 2.0f;
-        else screen_center_x -= 0.07f ;
-        player.move(0,factor);
-        platform.move();
+        if(player.safe){
+            if(tunnel.rot < 180.0f) tunnel.rot += 1.0f;
+            else player.safe = false;
+        }
+        else{
+            float factor = 1.0f;
+            if(player.position.x <= screen_center_x - 2.0f ) screen_center_x -= 0.24f,factor = 2.0f;
+            else screen_center_x -= 0.07f ;
+            player.move(0,factor);
+            platform.move();
+        }
     } 
 }
 void tick_elements() {
@@ -458,7 +470,7 @@ void initGL(GLFWwindow *window, int width, int height) {
     bond = clock();
     firet = clock();
     player = Player(-3.0f, bottom+2.0f, COLOR_BLACK,bottom);
-    dragon = Dragon(244.0f,2.0f);
+    dragon = Dragon(44.0f,2.0f);
     tunnel = Tunnel(22.0f,-1.0f);
     platform = Platform(-30.0f, bottom , 1);
     speeds.push_back(SpeedUp(5.0f, 3.0f, bottom));
