@@ -207,7 +207,7 @@ void Sword::draw(glm::mat4 VP) {
 bool Sword::tick(float x){
     if(x - this->position.x > 40) return true;
     this->position.x += this->xspeed;
-    this->position.y = 8*sin(this->position.x) - cos(this->position.x)+this->miny;
+    this->position.y = abs(8*sin(this->position.x)) - cos(this->position.x);
     return false;
 };
 
