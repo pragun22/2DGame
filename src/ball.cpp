@@ -42,7 +42,8 @@ void Ball::set_position(float x, float y) {
     this->position = glm::vec3(x, y, 0);
 }
 
-void Ball::tick(Player* hooman){
+bool Ball::tick(Player* hooman){
+	if(hooman->position.x - this->position.x > 50 ) return true;
 	if(hooman->magnet){
 		float t1 = abs(hooman->position.x - this->position.x);
 		float t2 = abs(hooman->position.y - this->position.y);
@@ -62,4 +63,5 @@ void Ball::tick(Player* hooman){
 			else this->position.y += force*(t2)/dis; 
 		}
 	}
+	return false;
 }

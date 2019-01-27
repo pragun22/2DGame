@@ -328,11 +328,15 @@ void tick_elements() {
         b.y = coins[i].position.y-0.2f;
         b.width = 0.4;
         b.height = 0.4;
-        coins[i].tick(&player);
+        if(coins[i].tick(&player)){
+            coins.erase(coins.begin()+i);
+            break;
+        }
         if(detect_collision(a,b)){
             if(coins[i].r == 0.2f) score+=1;
             else score +=5;
             coins.erase(coins.begin()+i);
+            break;
         }
     }
     for(int i = 0 ; i < sword.size() ; i++){
@@ -497,21 +501,6 @@ void initGL(GLFWwindow *window, int width, int height) {
     //      mag.push_back(Magnet(x,i%4 + 2));
     // }
     // for(int i = 0;i<50;i++){
-    //     float x1 = 94.2 +(float)i/1.5f;
-    //     if(i<=24 && i > 22){
-    //         coins.push_back(Ball(x1, 2.0f, COLOR_COIN2,0.3f));
-    //         coins.push_back(Ball(x1, 2.5f, COLOR_COIN2,0.3f));
-    //     }
-    //     else if(i<25){
-    //         coins.push_back(Ball(x1, 2.0f, COLOR_COIN,0.2f));
-    //         coins.push_back(Ball(x1, 2.5f, COLOR_COIN,0.2f));
-    //     }
-    //     else{
-    //         coins.push_back(Ball(x1,2.5f,COLOR_COIN,0.2f));
-    //         coins.push_back(Ball(x1,3.0f,COLOR_COIN,0.2f));
-    //     }
-    // }
-    // for(int i = 0;i<50;i++){
     //     float x1 = 184.2 +(float)i/1.5f;
     //     if(i<=24 && i > 22){
     //         coins.push_back(Ball(x1, 0.0f, COLOR_COIN2,0.3f));
@@ -584,6 +573,23 @@ int main(int argc, char **argv) {
                     if(!firebeams[i].flag){
                         firebeams[i].flag = true;
                         firebeams[i].time = end;
+                    }
+                }
+            }
+            if(abs(random1 - random2)<5 &&  coins.size()<20){
+                for(int i = 0;i<30;i++){
+                    float x1 = player.position.x+ 20.f +(float)i/1.5f;
+                    if(i<=24 && i > 22){
+                        coins.push_back(Ball(x1+rand()%2, rand()%7+1.0f-4.0f, COLOR_COIN2,0.3f));
+                        coins.push_back(Ball(x1+rand()%2, rand()%7+1.5f-4.0f, COLOR_COIN2,0.3f));
+                    }
+                    else if(i<25){
+                        coins.push_back(Ball(x1+rand()%2, rand()%7+1.25f-4.0f, COLOR_COIN,0.2f));
+                        coins.push_back(Ball(x1+rand()%2, rand()%7+2.0f-4.0f, COLOR_COIN,0.2f));
+                    }
+                    else{
+                        coins.push_back(Ball(x1+rand()%2,rand()%7+1.0f-4.0f,COLOR_COIN,0.2f));
+                        coins.push_back(Ball(x1+rand()%2,rand()%7+2.2f-4.0f,COLOR_COIN,0.2f));
                     }
                 }
             }

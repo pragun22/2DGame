@@ -60,9 +60,8 @@ void Platform::draw(glm::mat4 VP) {
 }
 
 void Platform::move(){
-    
 }
 
 void Platform::tick(Player* hooman){
-
+    if(hooman->position.x- this->position.x > 10000.0f) this->position.x = hooman->position.x; 
 }

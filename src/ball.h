@@ -13,7 +13,7 @@ public:
     float rotation;
     float friction;
     float r;
-    void tick(Player* hooman);
+    bool tick(Player* hooman);
     void draw(glm::mat4 VP);
     void set_position(float x, float y);
     double speed;
