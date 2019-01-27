@@ -413,7 +413,7 @@ void tick_elements() {
             
         } 
         for(int i = 0 ; i < mag.size() ; i++){
-            mag[i].tick(&player);
+            if(mag[i].tick(&player)) mag.erase(mag.begin()+i),break;
         }
         for(int i = 0; i < balloons.size(); i++){
             balloons[i].tick();   
@@ -484,6 +484,7 @@ void initGL(GLFWwindow *window, int width, int height) {
     platform = Platform(-30.0f, bottom , 1);
     dragon = Dragon(44.0f,2.0f);
     tunnel = Tunnel(22.0f,-1.0f);
+    firebeams.push_back(Firebeams(6, 6));
     // speeds.push_back(SpeedUp(5.0f, 3.0f, bottom));
     // pow_coins.push_back(CoinsUp(10.0f, 0.0f, bottom));
     // sword.push_back(Sword(5,2,bottom));
@@ -491,29 +492,9 @@ void initGL(GLFWwindow *window, int width, int height) {
     //     float x = 15 + ((float)i/1.5f)*21.2f;
     //     firelines.push_back(Firelines(x,2));
     // }
-    // firebeams.push_back(Firebeams(6, 6));
     // for(int i = 0; i < 10 ; i++){
     //     float x = 20.0f + i*26.3f;
     //     boomerang.push_back(Boomerang(2.0f,2.0f, x, 0.0f));   
-    // }
-    // for(int i = 0 ; i < 10 ; i++){
-    //     float x = 50.0f + i*43.0f;
-    //      mag.push_back(Magnet(x,i%4 + 2));
-    // }
-    // for(int i = 0;i<50;i++){
-    //     float x1 = 184.2 +(float)i/1.5f;
-    //     if(i<=24 && i > 22){
-    //         coins.push_back(Ball(x1, 0.0f, COLOR_COIN2,0.3f));
-    //         coins.push_back(Ball(x1, 0.5f, COLOR_COIN2,0.3f));
-    //     }
-    //     else if(i<25){
-    //         coins.push_back(Ball(x1, 0.0f, COLOR_COIN,0.2f));
-    //         coins.push_back(Ball(x1, 0.5f, COLOR_COIN,0.2f));
-    //     }
-    //     else{
-    //         coins.push_back(Ball(x1,0.5f,COLOR_COIN,0.2f));
-    //         coins.push_back(Ball(x1,1.0f,COLOR_COIN,0.2f));
-    //     }
     // }
     // Create and compile our GLSL program from the shaders
     //fonts work
@@ -569,12 +550,13 @@ int main(int argc, char **argv) {
             reset_screen();
             if(abs(random1 - random2)==0){
                 for(int i = 0 ; i < firebeams.size() ; i++){
-                    
                     if(!firebeams[i].flag){
                         firebeams[i].flag = true;
                         firebeams[i].time = end;
                     }
                 }
+                float pos = player.position.x + 52;
+                mag.push_back(Magnet(pos,rand()%7+3.0f));
             }
             if(abs(random1 - random2)<5 &&  coins.size()<20){
                 for(int i = 0;i<30;i++){

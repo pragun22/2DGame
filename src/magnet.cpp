@@ -80,8 +80,9 @@ void Magnet::draw(glm::mat4 VP) {
 void Magnet::set_position(float x, float y) {
     this->position = glm::vec3(x, y, 0);
 }
-void Magnet::tick(Player* hooman){
+bool Magnet::tick(Player* hooman){
     //to stick to magnet
+    if(hooman->position.x - this->position.x > 40) return true;
     bounding_box_t a,b;
     a.x = this->position.x;
     a.y = this->position.y;
@@ -118,6 +119,7 @@ void Magnet::tick(Player* hooman){
             hooman->yspeed += force*(t2)/dis; 
         }
     }
+    return false;
     // real function
 }
 bool Magnet::detect_collision(bounding_box_t a, bounding_box_t b) {
