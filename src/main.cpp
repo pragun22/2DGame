@@ -209,7 +209,10 @@ void tick_input(GLFWwindow *window) {
     if(right) {
         if(player.safe){
             if(tunnel.rot > 0.0f) tunnel.rot -= 1.0f;
-            else player.safe = false;
+            else{
+                tunnel.rot = 180.f;
+                player.safe = false;
+            }
         }
         else{
             float factor = 1.0f;
@@ -222,7 +225,11 @@ void tick_input(GLFWwindow *window) {
     if(left){
         if(player.safe){
             if(tunnel.rot < 180.0f) tunnel.rot += 1.0f;
-            else player.safe = false;
+            else 
+            {
+                tunnel.rot = 180.f;
+                player.safe = false;
+            }
         }
         else{
             float factor = 1.0f;
@@ -234,7 +241,7 @@ void tick_input(GLFWwindow *window) {
     } 
 }
 void tick_elements() {
-    // screen_center_x += 0.07f;
+    platform.tick(&player);
     clock_t temp = clock();
     int magtime = (int)(temp - magn)/CLOCKS_PER_SEC;
     if(magtime>10){
@@ -283,7 +290,7 @@ void tick_elements() {
     if(detect_collision(draco,a)){
     //   delete &dragon;
         score = 0;
-        dragon.position.x += 20.0f;
+        dragon.position.x += 220.0f;
         player.position.x -= 10.0f;
         usleep(45000);
     }
@@ -470,55 +477,55 @@ void initGL(GLFWwindow *window, int width, int height) {
     bond = clock();
     firet = clock();
     player = Player(-3.0f, bottom+2.0f, COLOR_BLACK,bottom);
+    platform = Platform(-30.0f, bottom , 1);
     dragon = Dragon(44.0f,2.0f);
     tunnel = Tunnel(22.0f,-1.0f);
-    platform = Platform(-30.0f, bottom , 1);
-    speeds.push_back(SpeedUp(5.0f, 3.0f, bottom));
-    pow_coins.push_back(CoinsUp(10.0f, 0.0f, bottom));
-    sword.push_back(Sword(5,2,bottom));
-    for(int i = 0 ; i < 15 ; i++){
-        float x = 15 + ((float)i/1.5f)*21.2f;
-        firelines.push_back(Firelines(x,2));
-    }
-    firebeams.push_back(Firebeams(6, 6));
-    for(int i = 0; i < 10 ; i++){
-        float x = 20.0f + i*26.3f;
-        boomerang.push_back(Boomerang(2.0f,2.0f, x, 0.0f));   
-    }
-    for(int i = 0 ; i < 10 ; i++){
-        float x = 50.0f + i*43.0f;
-         mag.push_back(Magnet(x,i%4 + 2));
-    }
-    for(int i = 0;i<50;i++){
-        float x1 = 94.2 +(float)i/1.5f;
-        if(i<=24 && i > 22){
-            coins.push_back(Ball(x1, 2.0f, COLOR_COIN2,0.3f));
-            coins.push_back(Ball(x1, 2.5f, COLOR_COIN2,0.3f));
-        }
-        else if(i<25){
-            coins.push_back(Ball(x1, 2.0f, COLOR_COIN,0.2f));
-            coins.push_back(Ball(x1, 2.5f, COLOR_COIN,0.2f));
-        }
-        else{
-            coins.push_back(Ball(x1,2.5f,COLOR_COIN,0.2f));
-            coins.push_back(Ball(x1,3.0f,COLOR_COIN,0.2f));
-        }
-    }
-    for(int i = 0;i<50;i++){
-        float x1 = 184.2 +(float)i/1.5f;
-        if(i<=24 && i > 22){
-            coins.push_back(Ball(x1, 0.0f, COLOR_COIN2,0.3f));
-            coins.push_back(Ball(x1, 0.5f, COLOR_COIN2,0.3f));
-        }
-        else if(i<25){
-            coins.push_back(Ball(x1, 0.0f, COLOR_COIN,0.2f));
-            coins.push_back(Ball(x1, 0.5f, COLOR_COIN,0.2f));
-        }
-        else{
-            coins.push_back(Ball(x1,0.5f,COLOR_COIN,0.2f));
-            coins.push_back(Ball(x1,1.0f,COLOR_COIN,0.2f));
-        }
-    }
+    // speeds.push_back(SpeedUp(5.0f, 3.0f, bottom));
+    // pow_coins.push_back(CoinsUp(10.0f, 0.0f, bottom));
+    // sword.push_back(Sword(5,2,bottom));
+    // for(int i = 0 ; i < 15 ; i++){
+    //     float x = 15 + ((float)i/1.5f)*21.2f;
+    //     firelines.push_back(Firelines(x,2));
+    // }
+    // firebeams.push_back(Firebeams(6, 6));
+    // for(int i = 0; i < 10 ; i++){
+    //     float x = 20.0f + i*26.3f;
+    //     boomerang.push_back(Boomerang(2.0f,2.0f, x, 0.0f));   
+    // }
+    // for(int i = 0 ; i < 10 ; i++){
+    //     float x = 50.0f + i*43.0f;
+    //      mag.push_back(Magnet(x,i%4 + 2));
+    // }
+    // for(int i = 0;i<50;i++){
+    //     float x1 = 94.2 +(float)i/1.5f;
+    //     if(i<=24 && i > 22){
+    //         coins.push_back(Ball(x1, 2.0f, COLOR_COIN2,0.3f));
+    //         coins.push_back(Ball(x1, 2.5f, COLOR_COIN2,0.3f));
+    //     }
+    //     else if(i<25){
+    //         coins.push_back(Ball(x1, 2.0f, COLOR_COIN,0.2f));
+    //         coins.push_back(Ball(x1, 2.5f, COLOR_COIN,0.2f));
+    //     }
+    //     else{
+    //         coins.push_back(Ball(x1,2.5f,COLOR_COIN,0.2f));
+    //         coins.push_back(Ball(x1,3.0f,COLOR_COIN,0.2f));
+    //     }
+    // }
+    // for(int i = 0;i<50;i++){
+    //     float x1 = 184.2 +(float)i/1.5f;
+    //     if(i<=24 && i > 22){
+    //         coins.push_back(Ball(x1, 0.0f, COLOR_COIN2,0.3f));
+    //         coins.push_back(Ball(x1, 0.5f, COLOR_COIN2,0.3f));
+    //     }
+    //     else if(i<25){
+    //         coins.push_back(Ball(x1, 0.0f, COLOR_COIN,0.2f));
+    //         coins.push_back(Ball(x1, 0.5f, COLOR_COIN,0.2f));
+    //     }
+    //     else{
+    //         coins.push_back(Ball(x1,0.5f,COLOR_COIN,0.2f));
+    //         coins.push_back(Ball(x1,1.0f,COLOR_COIN,0.2f));
+    //     }
+    // }
     // Create and compile our GLSL program from the shaders
     //fonts work
     //fonts work ends here

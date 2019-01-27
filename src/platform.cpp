@@ -60,5 +60,9 @@ void Platform::draw(glm::mat4 VP) {
 }
 
 void Platform::move(){
+    
+}
+
+void Platform::tick(Player* hooman){
 
 }
