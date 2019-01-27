@@ -355,7 +355,7 @@ void tick_elements() {
             firelines[i].tick(&player);
             bounding_box_t field;
             field.x = firelines[i].position.x-2.0f;
-            field.y = firelines[i].position.y+0.4f;
+            field.y = firelines[i].position.y+0.6f;
             field.width = 8.0f;
             field.height = 5.0f;
             if(detect_collision(a,field)){
@@ -364,7 +364,7 @@ void tick_elements() {
                     firelines[i].position.x += run_x;
                     firelines[i].position.y += run_y;
                 }
-                if(firelines[i].detect_collision(a)){
+                if(firelines[i].detect_collision(a,0.5f)){
                     firelines.erase(firelines.begin()+i);
                     if(!player.sword){
                         lives--;
@@ -373,12 +373,14 @@ void tick_elements() {
             }
             for(int j = 0; j < balloons.size(); j++)
             {
+                cout<<"iske andar to aaya"<<endl;
                 bounding_box_t ba;
                 ba.x = balloons[j].position.x - 0.4f;
                 ba.y = balloons[j].position.y - 0.4f;
                 ba.height = 0.4f;
                 ba.width = 0.4f;
-                if(detect_collision(field,ba) && firelines[i].detect_collision(ba)){
+                if(detect_collision(field,ba) && firelines[i].detect_collision(ba,0)){
+                    cout<<"detect ho gaya"<<endl;
                     firelines.erase(firelines.begin()+i);
                     balloons.erase(balloons.begin()+j);                
                     break;

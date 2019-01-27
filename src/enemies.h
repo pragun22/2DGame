@@ -16,7 +16,7 @@ public:
     void move();
     void tick(Player* hooman);
     void set_position(float x, float y);
-    bool detect_collision(bounding_box_t a);
+    bool detect_collision(bounding_box_t a,float b);
 private:
     VAO *object;
 };

@@ -83,12 +83,12 @@ void Firelines::tick(Player* hooman){
         if(this->rot > 0.0f) this->rot -= 2.3f;
    } 
 }
-bool Firelines::detect_collision(bounding_box_t a){
+bool Firelines::detect_collision(bounding_box_t a,float factor){
     float m = -1.0f * tan((float) (this->rotation * M_PI / 180.0f));
     float c = this->position.y + this->position.x*m;
     float normaliser = sqrt(1 + m*m);
     float c2 = 0.99f*normaliser +c;
-    for(float i = a.y ; i < a.y+a.height - 0.4f ; i+=0.05f){
+    for(float i = a.y ; i < a.y+a.height-factor; i+=0.05f){
         float dist  = ((a.x+a.width)*m + i - c)/normaliser;
         if(abs(dist)<0.1){
             return true;
