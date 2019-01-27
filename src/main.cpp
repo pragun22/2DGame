@@ -295,7 +295,10 @@ void tick_elements() {
         usleep(45000);
     }
     for(int i = 0 ; i< speeds.size();i++){
-        speeds[i].tick();
+        if(speeds[i].tick(player.position.x)){
+            speeds.erase(speeds.begin()+i);
+            break;
+        }
         bounding_box_t pow;
         pow.x = speeds[i].position.x - 0.6f*cos(M_PI/5.0f);
         pow.y = speeds[i].position.y - 0.6f*sin(M_PI/5.0f);
@@ -310,8 +313,10 @@ void tick_elements() {
         }
     }
     for(int i = 0 ; i< pow_coins.size();i++){
-        pow_coins[i].tick();
-        bounding_box_t pow;
+        if(pow_coins[i].tick(player.position.x)){
+            pow_coins.erase(pow_coins.begin()+i);
+            break;
+        }        bounding_box_t pow;
         pow.x = pow_coins[i].position.x - 0.6f*cos(M_PI/5.0f);
         pow.y = pow_coins[i].position.y - 0.6f*sin(M_PI/5.0f);
         pow.height = (0.6f + 0.6f*cos(M_PI/5.0f));
@@ -340,7 +345,10 @@ void tick_elements() {
         }
     }
     for(int i = 0 ; i < sword.size() ; i++){
-        sword[i].tick();
+        if(sword[i].tick(player.position.x)){
+            sword.erase(sword.begin()+i);
+            break;
+        }
         bounding_box_t tall,wid;
         tall.x = sword[i].position.x;
         tall.y = sword[i].position.y-0.80f;
@@ -413,7 +421,9 @@ void tick_elements() {
             
         } 
         for(int i = 0 ; i < mag.size() ; i++){
-            if(mag[i].tick(&player)) mag.erase(mag.begin()+i),break;
+            if(mag[i].tick(&player)){
+                mag.erase(mag.begin()+i);break;
+            } 
         }
         for(int i = 0; i < balloons.size(); i++){
             balloons[i].tick();   
@@ -485,16 +495,9 @@ void initGL(GLFWwindow *window, int width, int height) {
     dragon = Dragon(44.0f,2.0f);
     tunnel = Tunnel(22.0f,-1.0f);
     firebeams.push_back(Firebeams(6, 6));
-    // speeds.push_back(SpeedUp(5.0f, 3.0f, bottom));
-    // pow_coins.push_back(CoinsUp(10.0f, 0.0f, bottom));
-    // sword.push_back(Sword(5,2,bottom));
     // for(int i = 0 ; i < 15 ; i++){
     //     float x = 15 + ((float)i/1.5f)*21.2f;
     //     firelines.push_back(Firelines(x,2));
-    // }
-    // for(int i = 0; i < 10 ; i++){
-    //     float x = 20.0f + i*26.3f;
-    //     boomerang.push_back(Boomerang(2.0f,2.0f, x, 0.0f));   
     // }
     // Create and compile our GLSL program from the shaders
     //fonts work
@@ -539,6 +542,8 @@ int main(int argc, char **argv) {
             int timer = ((int) (end - start)) / CLOCKS_PER_SEC;
             int random1 = rand()%1232;
             int random2 = rand()%1232;
+            int rand1 = rand()%632;
+            int rand2 = rand()%632;
             // if(true){   
             draw();
             // Swap Frame Buffer in double buffering
@@ -556,26 +561,35 @@ int main(int argc, char **argv) {
                     }
                 }
                 float pos = player.position.x + 52;
-                mag.push_back(Magnet(pos,rand()%7+3.0f));
+                mag.push_back(Magnet(pos,rand()%9-3.0f));
             }
             if(abs(random1 - random2)<5 &&  coins.size()<20){
                 for(int i = 0;i<30;i++){
                     float x1 = player.position.x+ 20.f +(float)i/1.5f;
                     if(i<=24 && i > 22){
-                        coins.push_back(Ball(x1+rand()%2, rand()%7+1.0f-4.0f, COLOR_COIN2,0.3f));
-                        coins.push_back(Ball(x1+rand()%2, rand()%7+1.5f-4.0f, COLOR_COIN2,0.3f));
+                        coins.push_back(Ball(x1+rand()%7, rand()%11-7.0f, COLOR_COIN2,0.3f));
+                        coins.push_back(Ball(x1+rand()%7, rand()%11-7.0f, COLOR_COIN2,0.3f));
                     }
                     else if(i<25){
-                        coins.push_back(Ball(x1+rand()%2, rand()%7+1.25f-4.0f, COLOR_COIN,0.2f));
-                        coins.push_back(Ball(x1+rand()%2, rand()%7+2.0f-4.0f, COLOR_COIN,0.2f));
+                        coins.push_back(Ball(x1+rand()%8, rand()%9-7.0f, COLOR_COIN,0.2f));
+                        coins.push_back(Ball(x1+rand()%6, rand()%10-7.0f, COLOR_COIN,0.2f));
                     }
                     else{
-                        coins.push_back(Ball(x1+rand()%2,rand()%7+1.0f-4.0f,COLOR_COIN,0.2f));
-                        coins.push_back(Ball(x1+rand()%2,rand()%7+2.2f-4.0f,COLOR_COIN,0.2f));
+                        coins.push_back(Ball(x1+rand()%9,rand()%10-6.0f,COLOR_COIN,0.2f));
+                        coins.push_back(Ball(x1+rand()%7,rand()%9-6.0f,COLOR_COIN,0.2f));
                     }
                 }
             }
-
+            if(rand1==rand2){
+                float pos = player.position.x + 25.0f;
+                boomerang.push_back(Boomerang(2.0f,2.0f, pos, 0.0f));
+            }
+            if(random1%870<4){
+                float bottom = screen_center_y - 4 / screen_zoom;
+                speeds.push_back(SpeedUp(pos + 56.0f, 3.0f, bottom));
+                pow_coins.push_back(CoinsUp(pos+25.0f, 0.0f, bottom));
+                sword.push_back(Sword(pos+40.0f,2,bottom));  
+            }
         }
         // Poll for Keyboard and mouse events
         glfwPollEvents();

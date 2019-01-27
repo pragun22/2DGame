@@ -51,10 +51,10 @@ bool SpeedUp::detect_collision(bounding_box_t a, bounding_box_t b) {
     bool y = a.y + a.height >= b.y && b.y + b.height >= a.y?true:false;
     return (x && y);
 }
-void SpeedUp::tick(){
+bool SpeedUp::tick(float x){
+    if(x - this->position.x > 40) return true;
     if(this->yspeed>0) this->yspeed += 0.001f;
     else this->yspeed -= 0.001f;
-    
     
     this->position.x += this->xspeed;
     if(this->position.y > 0-this->miny){
@@ -62,6 +62,7 @@ void SpeedUp::tick(){
     }    
     else if(this->position.y < this->miny+2) this ->yspeed = 0.03;
     this->position.y += this->yspeed;
+    return false;
     
 };
 
@@ -116,9 +117,11 @@ bool CoinsUp::detect_collision(bounding_box_t a, bounding_box_t b) {
     bool y = a.y + a.height >= b.y && b.y + b.height >= a.y?true:false;
     return (x && y);
 }
-void CoinsUp::tick(){
+bool CoinsUp::tick(float x){
+    if(x - this->position.x > 40) return true;    
     this->position.x += this->xspeed;
-    this->position.y = 4*sin(this->position.x);
+    this->position.y = 7*sin(this->position.x)+this->miny;
+    return false;
 };
 
 Sword::Sword(float x, float y,float bottom) {
@@ -201,9 +204,11 @@ void Sword::draw(glm::mat4 VP) {
     glUniformMatrix4fv(Matrices.MatrixID, 1, GL_FALSE, &MVP[0][0]);
     draw3DObject(this->object);
 }
-void Sword::tick(){
+bool Sword::tick(float x){
+    if(x - this->position.x > 40) return true;
     this->position.x += this->xspeed;
-    this->position.y = 4*sin(this->position.x) - 2*cos(this->position.x);
+    this->position.y = 8*sin(this->position.x) - cos(this->position.x)+this->miny;
+    return false;
 };
 
 
