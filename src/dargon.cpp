@@ -107,7 +107,8 @@ void Dragon::set_position(float x, float y) {
     this->position = glm::vec3(x, y, 0);
 }
 
-void Dragon::tick(){
+void Dragon::tick(Player* p){
+    if(p->position.x - this->position.x > 180) this->position.x = p->position.x + 60.f;
     if(this->position.y < -4) this->fac = -0.07f;
     if(this->position.y > 1) this->fac = 0.07f;
     this->position.y -= this->fac;

@@ -78,10 +78,12 @@ void Firelines::draw(glm::mat4 VP) {
 void Firelines::set_position(float x, float y) {
     this->position = glm::vec3(x, y, 0);
 }
-void Firelines::tick(Player* hooman){
+bool Firelines::tick(Player* hooman){
+    if(hooman->position.x - this->position.x >40) return true;
     if(this->position.x - hooman->position.x < 10){
         if(this->rot > 0.0f) this->rot -= 2.3f;
    } 
+   return false;
 }
 bool Firelines::detect_collision(bounding_box_t a,float factor){
     float m = -1.0f * tan((float) (this->rotation * M_PI / 180.0f));
@@ -248,11 +250,13 @@ void Boomerang::draw(glm::mat4 VP) {
     glUniformMatrix4fv(Matrices.MatrixID, 1, GL_FALSE, &MVP[0][0]);
     draw3DObject(this->object);
 }
-void Boomerang::tick(){
+bool Boomerang::tick(float x){
+    if(x-this->position.x > 40) return true;
     this->rotation +=3.2f;
     this->degree += 0.025f;
     if(this->rotation > 360.0f) this->rotation = 0.0f;
     if(this->degree > 360.0f) this->degree = 0.0f;
     this->position.x = this->x + 15*cos(this->degree);
     this->position.y = this->y + 4*sin(this->degree);
+    return false;
 }

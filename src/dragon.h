@@ -18,7 +18,7 @@ public:
     float yspeed;
     float fac;
     void move();
-    void tick();
+    void tick(Player* p);
     void set_position(float x, float y);
     bool detect_collision(bounding_box_t a);
 private:

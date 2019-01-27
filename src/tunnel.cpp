@@ -60,6 +60,7 @@ void Tunnel::draw(glm::mat4 VP) {
 }
 
 void Tunnel::tick(Player* hooman){
+    if(hooman->position.x - this->position.x > 140.0f) this->position.x = hooman->position.x + 80.0f;
     if(hooman->safe){
         // if(this->rot > 0.0f) this->rot -= 1.0f;
         // else hooman->safe = false;

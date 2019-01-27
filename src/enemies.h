@@ -14,7 +14,7 @@ public:
     void draw(glm::mat4 VP);
     double speed;
     void move();
-    void tick(Player* hooman);
+    bool tick(Player* hooman);
     void set_position(float x, float y);
     bool detect_collision(bounding_box_t a,float b);
 private:
@@ -53,7 +53,7 @@ public:
     void draw(glm::mat4 VP);
     double speed;
     void move();
-    void tick();
+    bool tick(float x);
     void set_position(float x, float y);
 private:
     VAO *object;

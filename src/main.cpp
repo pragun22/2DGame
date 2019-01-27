@@ -134,7 +134,6 @@ void draw() {
     // Scene render
     // ball1.draw(VP);
     dragon.draw(VP);
-    dragon.tick();
     for(int i = 0; i < zero.size();i++) zero[i].draw(VP);
     for(int i = 0; i < one.size();i++) one[i].draw(VP);
     for(int i = 0; i < two.size();i++) two[i].draw(VP);
@@ -253,6 +252,7 @@ void tick_elements() {
     live_tick(lives);
     player.tick();
     tunnel.tick(&player);
+    dragon.tick(&player);
     if(player.sword){
         clock_t temp = clock();
         int timer = (int)(temp - safe)/CLOCKS_PER_SEC;
@@ -386,7 +386,10 @@ void tick_elements() {
            }
         }
         for(int i =0; i < firelines.size(); i++){
-            firelines[i].tick(&player);
+            if(firelines[i].tick(&player)){
+                firelines.erase(firelines.begin()+i);
+                break;
+            }
             bounding_box_t field;
             field.x = firelines[i].position.x-2.0f;
             field.y = firelines[i].position.y+0.6f;
@@ -443,7 +446,10 @@ void tick_elements() {
             }
         }
         for(int i =0; i < boomerang.size(); i++){
-            boomerang[i].tick();
+            if(boomerang[i].tick(player.position.x)){
+                boomerang.erase(boomerang.begin()+i);
+                break;
+            }
             bounding_box_t boomer;
             boomer.x = -0.5f + boomerang[i].position.x;
             boomer.y = -0.5f + boomerang[i].position.y;
